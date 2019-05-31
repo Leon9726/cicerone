@@ -1,0 +1,14 @@
+.profile-img-card {
+	width: 3rem;
+	height: 3rem;
+	margin: 0 auto 10px;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	vertical-align: middle;
+}
+
+.user {
+	text-decoration: none;
+	color: #858796;
+}
