@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<link href="css/home.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<nav th:replace="navbar :: nav"></nav>
+	<p>&ensp;</p>
+	<p>&ensp;</p>
+	<h1 style="font-size: 1.5rem; padding-left: 275px;">Profilo</h1>
+	<p>&ensp;</p>
+	<div class="container bootstrap snippet">
+		<div class="form-row">
+			<div class="col-sm-9">
+				<div class="tab-content">
+					<form action="#" th:action="@{/salvaUtente}" method="post" id="saveForm" th:object="${utente}" class="needs-validation" novalidate>
+						<div class="form-row">
+							<div class="form-group" th:classappend="${#fields.hasErrors('nome')}? has-error">
+	                          <div class="col-xs-6" style="padding-left: 80px;" >
+	                              <label for="first_name">Nome</label>
+	                              <input type="text" placeholder="Nome" id="nome" class="form-control" th:field="*{nome}" disabled/>
+	                          </div>
+                      		</div>
+							 <div class="form-group">
+		                          <div class="col-xs-6" style="padding-left: 80px;" th:classappend="${#fields.hasErrors('cognome')}? has-error">
+		                            <label for="last_name">Cognome</label>
+		                              <input type="text" placeholder="Cognome" id="cognome" class="form-control" th:field="*{cognome}" disabled>
+		                          </div>
+		                      </div>
+						</div>
+						<div class="form-row">
+							 <div class="form-group" th:classappend="${#fields.hasErrors('cellulare')}? has-error">
+		                          <div class="col-xs-6" style="padding-left: 80px;">
+		                             <label for="mobile">Cellulare</label>
+		                              <input type="text" placeholder="Telefono" id="num" class="form-control" th:field="*{cellulare}" disabled>
+		                          </div>
+		                      </div>
+		                       <div class="form-group" th:classappend="${#fields.hasErrors('email')}? has-error">
+		                          <div class="col-xs-6" style="padding-left: 80px;">
+		                              <label for="phone">Email</label>
+		                              <input type="text" placeholder="Email" id="emailRegi" class="form-control" th:field="*{email}" disabled>
+		                          </div>
+		                      </div>
+						</div>
+						<div class="form-row">
+							<div class="form-group" th:classappend="${#fields.hasErrors('password')}? has-error">
+		                          <div class="col-xs-6" style="padding-left: 80px;">
+		                              <label for="email">Password</label>
+		                              <input type="password" placeholder="Password" id="pwdRegi" class="form-control" th:field="*{password}" disabled>
+		                          </div>
+		                      </div>
+						</div>
+						<p>&ensp;</p>
+						<div class="form-row">
+							<div style="padding-left: 75px;"><a href="/home" class="btn btn-success" id="conferma">Conferma</a></div>
+							<div style="padding-left: 75px;"><button class="btn btn-primary" id="modifica">Modifica</button></div>
+						</div>
+							<div class="form-row">
+							<div style="padding-left: 75px;"><button type="submit" class="btn btn-success" id ="confermaMod">Conferma Modifiche</button></div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+    <script type="text/javascript">
+		var nome = '[[${utente.nome}]]';
+		var cognome = '[[${utente.cognome}]]';
+		var span = document.getElementById('userSpanId');
+		span.appendChild(document.createTextNode(nome + ' ' + cognome));
+		$('#confermaMod').hide();
+		
+		$("#modifica").click(function(event){
+			   event.preventDefault();
+			   $('.form-control').prop("disabled", false); // Element(s) are now enabled.
+			   $('#conferma').hide();
+			   $('#modifica').hide();
+			   $('#confermaMod').show();
+			});
+</script>
+ </html>                                                    

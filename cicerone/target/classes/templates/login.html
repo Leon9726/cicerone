@@ -1,13 +1,16 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link
-	href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-	rel="stylesheet" id="bootstrap-css">
-<script
-	src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- <link -->
+<!-- 	href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" -->
+<!-- 	rel="stylesheet" id="bootstrap-css"> -->
+<!-- <script -->
+<!-- 	src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> -->
 <script
 	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	
 <link href="css/my.css" rel="stylesheet" type="text/css">
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
 </head>
 <!------ Include the above in your HEAD tag ---------->
 
@@ -16,46 +19,66 @@
 		<h2>Hai un account?</h2>
 		<label id="label-register" for="log-reg-show">Login</label> <input
 			type="radio" name="active-log-panel" id="log-reg-show"
-			checked="checked">
+			checked="checked" onclick="switchPanel();">
 	</div>
 
 	<div class="register-info-box">
 		<h2>Non hai account?</h2>
-		<label id="label-login" for="log-login-show">Register</label> <input
-			type="radio" name="active-log-panel" id="log-login-show">
+		<label id="label-login" for="log-login-show">Registrati</label> <input
+			type="radio" name="active-log-panel" id="log-login-show" onclick="switchPanel();">
 	</div>
 
 	<div class="white-panel">
 		<div class="login-show">
 			<h2>LOGIN</h2>
-			<form action="/entra" method="POST">
+			<form id="formLogin" action="#" th:action="@{/entra}" method="POST">
 				<input type="text" placeholder="Email" name="emaiLogin" id="emailLogin"> <input
 					type="password" placeholder="Password" name="pwdLogin" id ="pwdLogin"> <input
-					type="submit" name="Login" value="Login">
+					type="button" name="Login" value="Login" onclick="submitForm();">
 			</form>
 		</div>
 		<div class="register-show">
 			<h2>REGISTRATI</h2>
-			<form action="/registra" method="POST">
-			<input type="text" placeholder="Nome" id="nome"> <input
-				type="text" placeholder="Cognome" id="cognome"> <input
-				type="text" placeholder="Email" id="emailRegi"> <input
-				type="text" placeholder="Telefono" id="num"> <input
-				type="password" placeholder="Password" id="pwdRegi"> <input
-				type="password" placeholder="Confirm Password"> <input
-				type="submit" name="Registrati" value="Registrati">
+			<form action="#" th:action="@{/registra}" method="POST" th:object="${utente}">
+				<div class="form-group" th:classappend="${#fields.hasErrors('nome')}? has-error">
+				 	<input type="text" placeholder="Nome" id="nome" class="form-control" th:field="*{nome}"/>
+				 </div>
+				 <div class="form-group" th:classappend="${#fields.hasErrors('cognome')}? has-error">
+				 	<input type="text" placeholder="Cognome" id="cognome" class="form-control" th:field="*{cognome}">
+				 </div>
+				 <div class="form-group" th:classappend="${#fields.hasErrors('email')}? has-error">
+				 	<input type="text" placeholder="Email" id="emailRegi" class="form-control" th:field="*{email}">
+				 </div>
+				 <div class="form-group" th:classappend="${#fields.hasErrors('cellulare')}? has-error">
+				 	<input type="text" placeholder="Telefono" id="num" class="form-control" th:field="*{cellulare}">
+				 </div>
+				 <div class="form-group" th:classappend="${#fields.hasErrors('password')}? has-error">
+				 	<input type="password" placeholder="Password" id="pwdRegi" class="form-control" th:field="*{password}">
+				 </div>
+			<input type="submit" name="Registrati" value="Registrati">
 			</form>
 		</div>
+		<!-- ospite -->
 	</div>
 </div>
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('.login-info-box').fadeOut();
-		$('.login-show').addClass('show-log-panel');
+		var isRegistra = '[[${isRegistra}]]';
+		if(isRegistra == 'true') {
+			$('.register-info-box').fadeOut();
+			$('.login-info-box').fadeIn();
+
+			$('.white-panel').addClass('right-log');
+			$('.register-show').addClass('show-log-panel');
+			$('.login-show').removeClass('show-log-panel');
+		} else {
+			$('.login-info-box').fadeOut();
+			$('.login-show').addClass('show-log-panel');
+		}
 	});
 
-	$('.login-reg-panel input[type="radio"]').on('change', function() {
+	function switchPanel() {
 		if ($('#log-login-show').is(':checked')) {
 			$('.register-info-box').fadeOut();
 			$('.login-info-box').fadeIn();
@@ -73,6 +96,14 @@
 			$('.login-show').addClass('show-log-panel');
 			$('.register-show').removeClass('show-log-panel');
 		}
-	});
+	}
+	
+	function submitForm(){
+		if($("#emailLogin").val()!="" && $("#pwdLogin").val() !="") {
+			$("#formLogin").submit();
+		} else{
+			alert("Inserire i campi");
+		}
+	}
 </script>
 </html>

@@ -12,3 +12,7 @@
 	text-decoration: none;
 	color: #858796;
 }
+
+.has-error .form-control, .has-error .form-control:focus {
+	border: 2px solid #e74c3c !important
+}

@@ -1,0 +1,66 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+</head>
+<nav class="navbar navbar-expand-lg navbar-dark"
+		style="background-color: black;" th:fragment="nav">
+
+		<!-- Additional container -->
+		<div class="container">
+			<!-- Collapse button -->
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#basicExampleNav" aria-controls="basicExampleNav"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Collapsible content -->
+			<div class="collapse navbar-collapse" id="basicExampleNav">
+
+				<!-- Links -->
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active"><a class="nav-link" href="/home">Home
+							<span class="sr-only">(current)</span>
+					</a></li>
+					<!-- Dropdown -->
+					<li class="nav-item dropdown"><a class="nav-link"
+						id="navbarDropdownMenuLink" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false"
+						style="cursor: pointer;">Attività</a>
+						<div class="dropdown-menu dropdown-primary"
+							aria-labelledby="navbarDropdownMenuLink">
+							<a class="dropdown-item" href="/attivita">Le mie attività</a> <a
+								class="dropdown-item" href="/aggiungiAttivita">Aggiungi Attività</a> <a
+								class="dropdown-item" href="/attivitaPrenotate">Attività Prenotate</a>
+						</div>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/pageRicercaAttivita">Ricerca Attività</a>
+					</li>
+
+				</ul>
+
+				<!-- Links -->
+
+				<ul class="nav navbar-nav navbar-right">
+					<li class="nav-item dropdown"><a class="nav-link"
+						id="navbarDropdownMenuLink" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false"
+						style="cursor: pointer;"> <span id="userSpanId"
+							style="color: #ffffff;"> </span> <img class="profile-img-card"
+							src="/images/user.png"></a>
+						<div class="dropdown-menu dropdown-primary"
+							aria-labelledby="navbarDropdownMenuLink">
+							<a class="dropdown-item" href="/profilo">Profilo</a> 
+							<a class="dropdown-item" href="/disattivaProfilo">Disattiva Profilo</a> 
+						</div>
+					</li>
+				</ul>
+			</div>
+			<!-- Collapsible content -->
+
+		</div>
+		<!-- Additional container -->
+
+	</nav>
+	</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,69 +12,12 @@
 <link href="css/home.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark"
-		style="background-color: black;">
-
-		<!-- Additional container -->
-		<div class="container">
-			<!-- Collapse button -->
-			<button class="navbar-toggler" type="button" data-toggle="collapse"
-				data-target="#basicExampleNav" aria-controls="basicExampleNav"
-				aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-
-			<!-- Collapsible content -->
-			<div class="collapse navbar-collapse" id="basicExampleNav">
-
-				<!-- Links -->
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active"><a class="nav-link" href="#">Home
-							<span class="sr-only">(current)</span>
-					</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Features</a>
-					</li>
-					<li class="nav-item"><a class="nav-link" href="#">Pricing</a>
-					</li>
-
-					<!-- Dropdown -->
-					<li class="nav-item dropdown"><a class="nav-link"
-						id="navbarDropdownMenuLink" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="false"
-						style="cursor: pointer;">Dropdown</a>
-						<div class="dropdown-menu dropdown-primary"
-							aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="#">Action</a> <a
-								class="dropdown-item" href="#">Another action</a> <a
-								class="dropdown-item" href="#">Something else here</a>
-						</div></li>
-
-				</ul>
-
-				<!-- Links -->
-
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/profilo"> <span id="userSpanId" style="color: #ffffff;">
-					</span> 
-					<img class="profile-img-card" src="/images/user.png">
-					</a></li>
-				</ul>
-			</div>
-			<!-- Collapsible content -->
-
-		</div>
-		<!-- Additional container -->
-
-	</nav>
+<nav th:replace="navbar :: nav"></nav>
 </body>
 
 <script type="text/javascript">
-	//var email = '[[${email}]]';
-	//var pwd = '[[${pwd}]]';
-		var nome = 'Leo';
-		var cognome = 'Mansueto';
-	//document.getElementById('email').value = email;
-	//document.getElementById('pwd').value = pwd;
+		var nome = '[[${utente.nome}]]';
+		var cognome = '[[${utente.cognome}]]';
 		var span = document.getElementById('userSpanId');
 		span.appendChild(document.createTextNode(nome + ' ' + cognome));
 </script>

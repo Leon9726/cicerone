@@ -134,7 +134,7 @@ a{
     border: 1px solid #b5b5b5;
     outline: none;
 }
-.register-show input[type="button"] {
+.register-show input[type="submit"] {
     max-width: 150px;
     width: 100%;
     background: #444444;
@@ -160,10 +160,12 @@ a{
     letter-spacing: 1px;
     z-index: 99;
 }
-a{
+a {
   text-decoration:none;
   color:#2c7715;
 }
+
+
     
     
     

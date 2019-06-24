@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<link href="../css/home.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<nav th:replace="navbar :: nav"></nav>
+	<p>&ensp;</p>
+	<p>&ensp;</p>
+	<h1 style="font-size: 1.5rem; padding-left: 522px;">Attività</h1>
+	<p>&ensp;</p>
+	<div class="container bootstrap snippet">
+		<div class="form-row">
+			<div class="col-sm-9">
+				<div class="tab-content">
+					<form action="#" th:action="@{/salvaAttivita}" method="post"
+						id="saveForm" th:object="${attivita}" class="needs-validation"
+						novalidate>
+						<input type="hidden" id="idAttivita" name="idAttivita" th:value="${attivita.idAttivita}">
+						<div class="form-row">
+							<div class="col-xs-6"
+								th:classappend="${#fields.hasErrors('nome')}? has-error">
+								<div class="form-group col-md-6">
+									<label for="inputEmail4">Nome</label> <input type="text"
+										class="form-control" id="nome" th:field="*{nome}" required>
+								</div>
+							</div>
+							<div class="col-xs-6"
+								th:classappend="${#fields.hasErrors('prezzo')}? has-error">
+								<div class="form-group col-md-6">
+									<label for="inputPassword4">Prezzo</label> <input type="text"
+										class="form-control" id="prezzo" th:field="*{prezzo}" required>
+								</div>
+							</div>
+							<div class="col-xs-6"
+								th:classappend="${#fields.hasErrors('maxPartecipanti')}? has-error">
+								<div class="form-group col-md-6">
+									<label for="inputPassword4" style="width: max-content;">Max Partecipanti</label> <input type="text"
+										class="form-control" id="prezzo" th:field="*{maxPartecipanti}" required>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-6" style="padding-left: 14px;"
+							th:classappend="${#fields.hasErrors('descrizione')}? has-error">
+							<div class="form-group">
+								<label for="inputAddress">Descrizione</label> <input type="text"
+									class="form-control" id="desc" th:field="*{descrizione}">
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-xs-6"
+								th:classappend="${#fields.hasErrors('data')}? has-error">
+								<div class="form-group col-md-8">
+									<label for="inputAddress2">Data</label> <input type="text"
+										class="form-control" id="data" th:field="*{data}" required>
+								</div>
+							</div>
+							<div class="col-xs-6"
+								th:classappend="${#fields.hasErrors('orario')}? has-error">
+								<div class="form-group col-md-6">
+									<label for="inputAddress2">Orario</label> <input type="text"
+										class="form-control" id="orario" th:field="*{orario}" required>
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-xs-6"
+								th:classappend="${#fields.hasErrors('citta')}? has-error">
+								<div class="form-group col-md-6">
+									<label for="inputCity">Citta</label> <input type="text"
+										class="form-control" id="citta" th:field="*{citta}" required>
+								</div>
+							</div>
+							<div class="col-xs-6"
+								th:classappend="${#fields.hasErrors('prov')}? has-error">
+								<div class="form-group col-md-6">
+									<label for="inputZip">Prov</label> <input type="text"
+										class="form-control" id="prov" th:field="*{prov}" required>
+								</div>
+							</div>
+						</div>
+						<p>&ensp;</p>
+						<div style="padding-left: 12px;">
+							<button type="submit" class="btn btn-success">Conferma</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+	var nome = '[[${utente.nome}]]';
+	var cognome = '[[${utente.cognome}]]';
+	var span = document.getElementById('userSpanId');
+	span.appendChild(document.createTextNode(nome + ' ' + cognome));
+</script>
+</html>
