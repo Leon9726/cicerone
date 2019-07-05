@@ -1,64 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<link href="css/home.css" rel="stylesheet" type="text/css">
-</head>
-<body>
-	<nav th:replace="navbar :: nav"></nav>
-	<div th:replace="modale :: modale"></div>
-	<p>&ensp;</p>
-	<p>&ensp;</p>
-	<h1 style="font-size: 1.5rem; padding-left: 275px;">Ricerca
-		Attivita</h1>
-	<p>&ensp;</p>
-	<div class="container bootstrap snippet">
-		<div class="form-row">
-			<div class="col-sm-9">
-				<div class="tab-content">
-					<form action="#" th:action="@{/ricercaAttivita}" method="post"
-						id="saveForm" class="needs-validation">
-						<div class="form-row">
-							<div class="form-group col-md-6">
-								<label for="inputNome">Nome</label> <input type="text"
-									class="form-control" name="nome">
-							</div>
-							<div class="form-group col-md-6">
-								<label for="prezzo">Prezzo</label> <input type="text"
-									class="form-control" name="prezzo">
-							</div>
-							<div class="form-group col-md-6">
-								<label for="citta">Citta</label> <input type="text"
-									class="form-control" name="citta">
-							</div>
-							<div class="form-group col-md-6">
-								<label for="citta">Provincia</label> <input type="text"
-									class="form-control" name="prov">
-							</div>
-							<div class="form-group col-md-6">
-								<label for="data">Data</label> <input type="text"
-									placeholder="yyyy-MM-dd" class="form-control" name="data">
-							</div>
-						</div>
-						<div style="padding-left: 12px;">
-							<button type="submit" class="btn btn-success">Cerca</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="attivitaRicercate" th:if="${attivitaList} != null">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+		<script
+			src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+		<script
+			src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+		<link href="css/home.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<nav th:replace="navbar :: nav"></nav>
+		<div th:replace="modale :: modale"></div>
+		<div id="attivitaSalvate" th:if="${attivitaList} != null">
 		<p>&ensp;</p>
 		<p>&ensp;</p>
-		<h1 style="font-size: 1.5rem;">Attività</h1>
+		<h1 style="font-size: 1.5rem;">Attività Salvate</h1>
 		<p>&ensp;</p>
 		<table class="table table-striped table-bordered">
 			<thead>
@@ -95,13 +54,10 @@
 					<td><span th:text="${attivita.email}"></span></td>
 					<td><span th:text="${attivita.postiDisponibili}"></span></td>
 					<td>
-						<a class="btn btn-primary" id="prenota" th:onclick="|valorizzaModale('${attivita.idAttivita}','${attivita.idCicerone}')|"> <span style="color: white;">Prenota</span></a>
+						<a class="btn btn-primary" id="prenota" th:onclick="|valorizzaModale('${attivita.idAttivita}','${attivita.idCicerone}', '${attivita.idAttivitaSalvate}')|"> <span style="color: white;">Prenota</span></a>
 					</td>
 					<td>
-						<a class="btn btn-success" id="salvaAttivita" th:href="@{'/doSalvaAttivita/' + ${attivita.idAttivita}}"> <span style="color: white;">Salva</span></a>
-					</td>
-					<td>
-						<a class="btn btn-success" id="trovaFeedback" th:href="@{'/trovaFeedback/' + ${attivita.idCicerone}}"> <span style="color: white;">Feedback</span></a>
+						<a class="btn btn-success" id="eliminaAttivita" th:href="@{'/doEliminaAttivitaSalvata/' + ${attivita.idAttivitaSalvate}}"> <span style="color: white;">Elimina</span></a>
 					</td>
 				</tr>
 			</tbody>
@@ -143,17 +99,18 @@
 <script type="text/javascript">
 	var attivitaList = '[[${attivitaList}]]';
 	if(attivitaList != null){
-		$('#attivitaRicercate').show();
+		$('#attivitaSalvate').show();
 	} else {
-		$('#attivitaRicercate').hide();
+		$('#attivitaSalvate').hide();
 	}
 	
-	function valorizzaModale(idAttivita, idCicerone) {
+	function valorizzaModale(idAttivita, idCicerone, idAttivitaSalvate) {
 		$('#idAttivita').val(idAttivita);
 		$('#idCicerone').val(idCicerone);
-		$('#tipologia').val("Ricercate");
+		$('#idAttivitaSalvate').val(idAttivitaSalvate);
+		$('#tipologia').val("Salvate");
 		$('#confirm-submit').modal('show');
 	}
-	
 </script>
+		
 </html>

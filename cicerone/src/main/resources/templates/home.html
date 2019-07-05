@@ -13,12 +13,9 @@
 </head>
 <body>
 <nav th:replace="navbar :: nav"></nav>
+<div th:replace="modale :: modale"></div> 
 </body>
 
-<script type="text/javascript">
-		var nome = '[[${utente.nome}]]';
-		var cognome = '[[${utente.cognome}]]';
-		var span = document.getElementById('userSpanId');
-		span.appendChild(document.createTextNode(nome + ' ' + cognome));
-</script>
+<script th:replace="script :: script"></script>
+
 </html>

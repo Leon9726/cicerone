@@ -12,40 +12,69 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.test.annotation.Timed;
 
-public class Attivita {
+public class AttivitaRicercate {
 	
-	@Size(min=1, message="Nome deve essere inserito")
-	@Pattern(regexp = "^[a-zA-Z]*$")
+	private int idPrenotazione;
+	
+	private int idAttivitaSalvate;
+	
+	private int partecipantiPrenotati;
+	
 	private String nome;
 	
-	@Size(max=50, message="Massimo 50 caratteri")
 	private String descrizione;
 	
-	@Size(min=1, message="Città deve essere inserita")
-	@Pattern(regexp = "^[a-zA-Z]*$")
 	private String citta;
 	
-	@Size(min=1, max=2, message="Provincia deve essere inserita")
-	@Pattern(regexp = "^[a-zA-Z]*$")
 	private String prov;
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date data;
 	
-	@NotNull
 	private Time orario;
 	
-	@Size(min=1, message="Prezzo deve essere inserito")
-	@Pattern(regexp="[0-9]+([,.][0-9]{1,2})?")
 	private String prezzo;
 	
-    @Min(1)
 	private int maxPartecipanti;
 	
 	private int idAttivita;
 	
 	private int idCicerone;
 	
+	private String nomeCicerone;
+	
+	private String cognomeCicerone;
+	
+	private String email;
+	
+	private int postiDisponibili;
+	
+	private int postiPrenotati;
+	
+	private String stato;
+
+	public String getNomeCicerone() {
+		return nomeCicerone;
+	}
+
+	public void setNomeCicerone(String nomeCicerone) {
+		this.nomeCicerone = nomeCicerone;
+	}
+
+	public String getCognomeCicerone() {
+		return cognomeCicerone;
+	}
+
+	public void setCognomeCicerone(String cognomeCicerone) {
+		this.cognomeCicerone = cognomeCicerone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	public String getNome() {
 		return nome;
@@ -125,6 +154,54 @@ public class Attivita {
 
 	public void setIdCicerone(int idCicerone) {
 		this.idCicerone = idCicerone;
+	}
+
+	public int getIdPrenotazione() {
+		return idPrenotazione;
+	}
+
+	public void setIdPrenotazione(int idPrenotazione) {
+		this.idPrenotazione = idPrenotazione;
+	}
+
+	public int getPartecipantiPrenotati() {
+		return partecipantiPrenotati;
+	}
+
+	public void setPartecipantiPrenotati(int partecipantiPrenotati) {
+		this.partecipantiPrenotati = partecipantiPrenotati;
+	}
+
+	public int getPostiDisponibili() {
+		return postiDisponibili;
+	}
+
+	public void setPostiDisponibili(int postiDisponibili) {
+		this.postiDisponibili = postiDisponibili;
+	}
+
+	public int getPostiPrenotati() {
+		return postiPrenotati;
+	}
+
+	public void setPostiPrenotati(int postiPrenotati) {
+		this.postiPrenotati = postiPrenotati;
+	}
+
+	public String getStato() {
+		return stato;
+	}
+
+	public void setStato(String stato) {
+		this.stato = stato;
+	}
+
+	public int getIdAttivitaSalvate() {
+		return idAttivitaSalvate;
+	}
+
+	public void setIdAttivitaSalvate(int idAttivitaSalvate) {
+		this.idAttivitaSalvate = idAttivitaSalvate;
 	}
 
 }

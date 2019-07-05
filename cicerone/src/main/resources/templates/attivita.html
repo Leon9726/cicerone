@@ -13,6 +13,7 @@
 </head>
 <body>
 	<nav th:replace="navbar :: nav"></nav>
+	<div th:replace="modale :: modale"></div>
 	<p>&ensp;</p>
 	<p>&ensp;</p>
 	<h1 style="font-size: 1.5rem;">Le tue attività</h1>
@@ -60,10 +61,5 @@
 	</table>
 </body>
 
-<script type="text/javascript">
-	var nome = '[[${utente.nome}]]';
-	var cognome = '[[${utente.cognome}]]';
-	var span = document.getElementById('userSpanId');
-	span.appendChild(document.createTextNode(nome + ' ' + cognome));
-</script>
+<script th:replace="script :: script"></script>
 </html>

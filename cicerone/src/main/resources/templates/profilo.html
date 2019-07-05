@@ -13,6 +13,7 @@
 </head>
 <body>
 	<nav th:replace="navbar :: nav"></nav>
+	<div th:replace="modale :: modale"></div>
 	<p>&ensp;</p>
 	<p>&ensp;</p>
 	<h1 style="font-size: 1.5rem; padding-left: 275px;">Profilo</h1>
@@ -72,11 +73,10 @@
 		</div>
 	</div>
 </body>
+	<script th:replace="script :: script"></script>
+	
     <script type="text/javascript">
-		var nome = '[[${utente.nome}]]';
-		var cognome = '[[${utente.cognome}]]';
-		var span = document.getElementById('userSpanId');
-		span.appendChild(document.createTextNode(nome + ' ' + cognome));
+		
 		$('#confermaMod').hide();
 		
 		$("#modifica").click(function(event){

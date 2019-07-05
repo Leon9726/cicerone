@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+</head>
+		<th:block th:fragment="script">
+            <script type="text/javascript">
+				var nome = '[[${utente.nome}]]';
+				var cognome = '[[${utente.cognome}]]';
+				var span = document.getElementById('userSpanId');
+				span.appendChild(document.createTextNode(nome + ' ' + cognome));
+				let attivita = '[[${attivitaListPrenotate}]]';
+				if(attivita.length != 2) { 
+					var span = document.getElementById('numNotifiche');
+					span.appendChild(document.createTextNode(attivita.length/48));
+				}
+				
+				var errore = '[[${errore}]]';
+				if (errore != '') {
+					alert(errore);
+				}
+			</script>
+       </th:block>
+</html>

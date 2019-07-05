@@ -13,6 +13,7 @@
 </head>
 <body>
 	<nav th:replace="navbar :: nav"></nav>
+	<div th:replace="modale :: modale"></div>
 	<p>&ensp;</p>
 	<p>&ensp;</p>
 	<h1 style="font-size: 1.5rem; padding-left: 522px;">Attività</h1>
@@ -60,7 +61,7 @@
 								th:classappend="${#fields.hasErrors('data')}? has-error">
 								<div class="form-group col-md-8">
 									<label for="inputAddress2">Data</label> <input type="text"
-										class="form-control" id="data" th:field="*{data}" required>
+										class="form-control" id="data" th:field="*{data}" placeholder="yyyy-MM-dd" required>
 								</div>
 							</div>
 							<div class="col-xs-6"
@@ -98,10 +99,5 @@
 	</div>
 </body>
 
-<script type="text/javascript">
-	var nome = '[[${utente.nome}]]';
-	var cognome = '[[${utente.cognome}]]';
-	var span = document.getElementById('userSpanId');
-	span.appendChild(document.createTextNode(nome + ' ' + cognome));
-</script>
+<script th:replace="script :: script"></script>
 </html>

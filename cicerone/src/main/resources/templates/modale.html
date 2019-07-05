@@ -1,0 +1,48 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+</head>
+<div class="modal fade" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true" th:fragment="modale"
+	id="modalPrenotate">
+	<div class="modal-dialog">
+		<div class="modal-content" style="width: 130%;">
+			<div class="modal-body">
+				Richieste di prenotazione
+				<p>&ensp;</p>
+				<p>&ensp;</p>
+				<table class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th scope="col">Nome</th>
+							<th scope="col">Partecipanti</th>
+							<th scope="col"></th>
+							<th scope="col"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:if="${attivitaListPrenotate.empty}">
+							<td colspan="2">Nessuna prenotazione presente</td>
+						</tr>
+						<tr th:each="attivita : ${attivitaListPrenotate}">
+							<td><span th:text="${attivita.nome}"></span></td>
+							<td><span th:text="${attivita.partecipantiPrenotati}"></span></td>
+							<td><a
+								th:href="@{'/doConfermaPrenotazione/' + ${attivita.idPrenotazione}}"
+								class="btn btn-success"> <span>Conferma Prenotazione</span>
+							</a></td>
+							<td><a
+								th:href="@{'/doRifiutaPrenotazione/' + ${attivita.idPrenotazione}}"
+								class="btn btn-danger"> <span>Rifiuta Prenotazione</span>
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+</html>
