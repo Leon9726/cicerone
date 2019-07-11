@@ -75,7 +75,8 @@
 					<th scope="col">Email</th>
 					<th scope="col">Posti disponibili</th>
 					<th scope="col"></th>
-					<th scope="col"></th>
+					<th scope="col" th:if="${utente.nome != 'Ospite'}"></th>
+					<th scope="col" th:if="${utente.nome != 'Ospite'}"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -94,11 +95,11 @@
 					<td><span th:text="${attivita.nomeCicerone}"></span><span>  </span><span th:text="${attivita.cognomeCicerone}"></span></td>
 					<td><span th:text="${attivita.email}"></span></td>
 					<td><span th:text="${attivita.postiDisponibili}"></span></td>
-					<td>
-						<a class="btn btn-primary" id="prenota" th:onclick="|valorizzaModale('${attivita.idAttivita}','${attivita.idCicerone}')|"> <span style="color: white;">Prenota</span></a>
+					<td th:if="${utente.nome != 'Ospite'}">
+						<a class="btn btn-primary" id="prenota"  th:onclick="|valorizzaModale('${attivita.idAttivita}','${attivita.idCicerone}')|"> <span style="color: white;">Prenota</span></a>
 					</td>
-					<td>
-						<a class="btn btn-success" id="salvaAttivita" th:href="@{'/doSalvaAttivita/' + ${attivita.idAttivita}}"> <span style="color: white;">Salva</span></a>
+					<td th:if="${utente.nome != 'Ospite'}">
+						<a class="btn btn-success" id="salvaAttivita" th:if="${utente.nome != 'Ospite'}" th:href="@{'/doSalvaAttivita/' + ${attivita.idAttivita}}"> <span style="color: white;">Salva</span></a>
 					</td>
 					<td>
 						<a class="btn btn-success" id="trovaFeedback" th:href="@{'/trovaFeedback/' + ${attivita.idCicerone}}"> <span style="color: white;">Feedback</span></a>
@@ -147,6 +148,11 @@
 	} else {
 		$('#attivitaRicercate').hide();
 	}
+	
+// 	if( nome == 'Ospite') {
+// 		$('#salvaAttivita').hide();
+// 		$('#prenota').hide();
+// 	}
 	
 	function valorizzaModale(idAttivita, idCicerone) {
 		$('#idAttivita').val(idAttivita);

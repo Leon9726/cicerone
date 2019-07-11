@@ -48,6 +48,14 @@ public class CiceroneController {
 		model.addAttribute("utente", new Utente());
 		return "login";
 	}
+	
+	@RequestMapping(value = "/entraOspite", method = RequestMethod.GET)
+	public String entraOspite(Model model) {
+		utente.setNome("Ospite");
+		model.addAttribute("utente", utente);
+		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
+		return "home";
+	}
 
 	@RequestMapping(value = "/registra", method = RequestMethod.POST)
 	public String registraUtente(@Valid @ModelAttribute("utente") Utente utenteValid, BindingResult result,
