@@ -28,6 +28,8 @@ public class DbQuery {
 	JdbcTemplate jdbc;
 
 	private static final String SELECT_UTENTE_BY_EMAIL = "select * from utenti where Email=?";
+	
+	private static final String SELECT_UTENTE = "select * from utenti where Email=? and id_utente <> ?";
 
 	private static final String DISATTIVA_UTENTE = "UPDATE utenti SET stato = 0 WHERE (id_utente = ?)";
 
@@ -228,5 +230,13 @@ public class DbQuery {
 			}
 		}
 		return sql.toString();
+	}
+
+	public boolean esisteUtente(String email, int idUtente) {
+		Utente u = jdbc.query(SELECT_UTENTE, new UtenteMapper(), email, idUtente);
+		if(u == null) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -34,6 +34,8 @@ public class CiceroneController {
 
 	@Autowired
 	EmailProvider emailProvider;
+	
+	String errore;
 
 	Utente utente = new Utente();
 
@@ -114,17 +116,25 @@ public class CiceroneController {
 	public String profilo(Model model) {
 		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
 		model.addAttribute("utente", utente);
+		if(errore!= null) {
+			model.addAttribute("errore", errore);
+		}
 		return "profilo";
 	}
 
 	@RequestMapping(value = "/salvaUtente", method = RequestMethod.POST)
 	private String salvaUtente(@Valid @ModelAttribute("utente") Utente utenteUpdate, BindingResult result,
 			Model model) {
+		errore= null;
 		if (!result.hasErrors()) {
-			modificaUtente(utenteUpdate);
-			dbQuery.salvaUtente(utente);
+			if(!dbQuery.esisteUtente(utenteUpdate.getEmail(), utente.getIdUtente())){
+				modificaUtente(utenteUpdate);
+				dbQuery.salvaUtente(utente);
+			} else {
+				errore="Email già esistente";
+			}
 		} else {
-			model.addAttribute("errore", "Errore nei campi inseriti");
+				errore = "Errore nei campi inseriti";
 		}
 		return "redirect:/profilo";
 	}
