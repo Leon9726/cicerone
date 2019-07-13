@@ -5,8 +5,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 
-import itps.cicerone.App;
-
 @EnableAutoConfiguration 
 @Configuration 
 @SpringBootApplication(scanBasePackages = {"itps"})

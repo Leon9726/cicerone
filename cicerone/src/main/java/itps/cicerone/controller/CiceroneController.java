@@ -145,7 +145,7 @@ public class CiceroneController {
 	}
 
 	@RequestMapping(value = "/salvaUtente", method = RequestMethod.POST)
-	private String salvaUtente(@Valid @ModelAttribute(UTENTE_COSTANT) Utente utenteUpdate, BindingResult result,
+	public String salvaUtente(@Valid @ModelAttribute(UTENTE_COSTANT) Utente utenteUpdate, BindingResult result,
 			Model model) {
 		errore= null;
 		if (!result.hasErrors()) {
@@ -162,7 +162,7 @@ public class CiceroneController {
 	}
 
 	@RequestMapping(value = "/salvaAttivita", method = RequestMethod.POST)
-	private String salvaAttivita(@Valid @ModelAttribute(ATTIVITA_COST) Attivita attivita, BindingResult result,
+	public String salvaAttivita(@Valid @ModelAttribute(ATTIVITA_COST) Attivita attivita, BindingResult result,
 			Model model) {
 		model.addAttribute(UTENTE_COSTANT, utente);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
@@ -179,14 +179,14 @@ public class CiceroneController {
 	}
 
 	@RequestMapping(value = "/pageRicercaAttivita", method = RequestMethod.GET)
-	private String pageRicercaAttivita(Model model) {
+	public String pageRicercaAttivita(Model model) {
 		model.addAttribute(UTENTE_COSTANT, utente);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return "ricerca-attivita";
 	}
 
 	@RequestMapping(value = "/ricercaAttivita", method = RequestMethod.POST)
-	private String ricercaAttivita(Model model, HttpServletRequest request) {
+	public String ricercaAttivita(Model model, HttpServletRequest request) {
 		Map<String, String> parametri = new HashMap<String, String>();
 		parametri.put("nome", request.getParameter("nome"));
 		parametri.put("prov", request.getParameter("prov"));
@@ -201,7 +201,7 @@ public class CiceroneController {
 	}
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	private String home(Model model) {
+	public String home(Model model) {
 		attivitaPrenotate = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 0);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		model.addAttribute(UTENTE_COSTANT, utente);
@@ -209,7 +209,7 @@ public class CiceroneController {
 	}
 
 	@RequestMapping(value = "/attivita", method = RequestMethod.GET)
-	private String attivita(Model model) {
+	public String attivita(Model model) {
 		attivitaList = dbQuery.trovaAttivita(utente.getIdUtente());
 		model.addAttribute(UTENTE_COSTANT, utente);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
@@ -218,7 +218,7 @@ public class CiceroneController {
 	}
 	
 	@RequestMapping(value = "/attivitaSalvate", method = RequestMethod.GET)
-	private String attivitaSalvate(Model model) {
+	public String attivitaSalvate(Model model) {
 		List<AttivitaRicercate> attivitaSalvate = dbQuery.trovaAttivitaSalvate(utente.getIdUtente());
 		model.addAttribute(UTENTE_COSTANT, utente);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);

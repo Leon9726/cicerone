@@ -73,6 +73,8 @@ public class DbQuery {
 	private static final String SELECT_FEEDBACK= "select nome, cognome, punteggio, didascalia from cicerone.feedback left join utenti on utenti.id_utente = feedback.id_utente where id_cicerone=?";
 	
 	
+	private static final String AND=" and ";
+	
 	public Utente trovaUtente(String email) {
 		return jdbc.query(SELECT_UTENTE_BY_EMAIL, new UtenteMapper(), email);
 	}
@@ -204,28 +206,28 @@ public class DbQuery {
 						.append("'").append(idUtente).append("'")
 						.append(" or prenotazioni.id_utente is null or prenotazioni.Stato = 'respinta') and Max_partecipanti <> attivita.posti_prenotati and ");
 		sql.append("'").append(idUtente).append("'").append("<> attivita.id_cicerone");
-		if (parametri.get("nome") != "") {
+		if (parametri.get("nome").equals("")) {
 			chiavi.add("nome");
 		}
-		if (parametri.get("citta") != "") {
+		if (parametri.get("citta").equals("")) {
 			chiavi.add("citta");
 		}
-		if (parametri.get("prov") != "") {
+		if (parametri.get("prov").equals("")) {
 			chiavi.add("prov");
 		}
-		if (parametri.get("data") != "") {
+		if (parametri.get("data").equals("")) {
 			chiavi.add("data");
 		}
-		if (parametri.get("prezzo") != "") {
+		if (parametri.get("prezzo").equals("")) {
 			chiavi.add("prezzo");
 		}
 		for (int i = 0; i < chiavi.size(); i++) {
 			if (i == (chiavi.size() - 1)) {
-				sql.append(" and ").append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i)))
+				sql.append(AND).append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i)))
 						.append("'").append(";");
 			} else {
-				sql.append(" and ").append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i)))
-						.append("'").append(" and ");
+				sql.append(AND).append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i)))
+						.append("'").append(AND);
 			}
 		}
 		return sql.toString();
