@@ -30,6 +30,7 @@ public class Attivita {
 	private String prov;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@NotNull
 	private Date data;
 	
 	@NotNull
