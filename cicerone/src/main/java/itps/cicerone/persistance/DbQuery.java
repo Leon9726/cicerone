@@ -19,7 +19,6 @@ import itps.cicerone.model.Feedback;
 import itps.cicerone.model.FeedbackMapper;
 import itps.cicerone.model.Utente;
 import itps.cicerone.model.UtenteMapper;
-import sun.net.idn.Punycode;
 
 @Component
 public class DbQuery {

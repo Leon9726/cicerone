@@ -1,5 +1,7 @@
 package itps.cicerone.controller;
 
+import static org.hamcrest.CoreMatchers.endsWith;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,29 +46,49 @@ public class CiceroneController {
 	List<AttivitaRicercate> attivitaPrenotate = new ArrayList<AttivitaRicercate>();
 	
 	List<Feedback> feedback = new ArrayList<Feedback>();
+	
+	private static final String UTENTE_COSTANT="utente";
+	
+	private static final String LOGIN_COSTANT="login";
+	
+	private static final String ATT_PREN_COSTANT="attivitaListPrenotate";
+	
+	private static final String ATT_COSTANT="attivitaList";
+	
+	private static final String ERR_COSTANT="errore";
+	
+	private static final String IS_REGISTRA="isRegistra";
+	
+	private static final String ERRORE_COST="Errore nei campi inseriti";
+	
+	private static final String ATTIVITA_MOD="modifica-attivita";
+	
+	private static final String ATTIVITA_COST="attivita";
+	
+	private static final String REDIRECT_COST="redirect:/attivitaPrenotate";
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String homePage(Model model) {
-		model.addAttribute("utente", new Utente());
-		return "login";
+		model.addAttribute(UTENTE_COSTANT, new Utente());
+		return LOGIN_COSTANT;
 	}
 	
 	@RequestMapping(value = "/entraOspite", method = RequestMethod.GET)
 	public String entraOspite(Model model) {
 		utente.setNome("Ospite");
-		model.addAttribute("utente", utente);
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return "home";
 	}
 
 	@RequestMapping(value = "/registra", method = RequestMethod.POST)
-	public String registraUtente(@Valid @ModelAttribute("utente") Utente utenteValid, BindingResult result,
+	public String registraUtente(@Valid @ModelAttribute(UTENTE_COSTANT) Utente utenteValid, BindingResult result,
 			Model model) {
-		model.addAttribute("attivitaList", attivitaPrenotate);
+		model.addAttribute(ATT_COSTANT, attivitaPrenotate);
 		if (result.hasErrors()) {
-			model.addAttribute("errore", "Errore nei campi inseriti");
-			model.addAttribute("isRegistra", true);
-			return "login";
+			model.addAttribute(ERR_COSTANT, ERRORE_COST);
+			model.addAttribute(IS_REGISTRA, true);
+			return LOGIN_COSTANT;
 		}
 		utente = dbQuery.trovaUtente(utenteValid.getEmail());
 		if (utente == null) {
@@ -74,13 +96,13 @@ public class CiceroneController {
 			dbQuery.inserisciUtente(utente);
 			utente.setIdUtente(dbQuery.trovaIDUtente(utente.getEmail()));
 			attivitaPrenotate = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 0);
-			model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
-			model.addAttribute("utente", utente);
-			model.addAttribute("isRegistra", false);
+			model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
+			model.addAttribute(UTENTE_COSTANT, utente);
+			model.addAttribute(IS_REGISTRA, false);
 			return "home";
 		}
-		model.addAttribute("isRegistra", true);
-		return "login";
+		model.addAttribute(IS_REGISTRA, true);
+		return LOGIN_COSTANT;
 	}
 
 	@RequestMapping(value = "/entra", method = RequestMethod.POST)
@@ -91,39 +113,39 @@ public class CiceroneController {
 			if (!utente.getPassword().equals(pwd)) {
 				stringBuilder.append("Password non comabace per l'utente : ")
 						.append(utente.getCognome()).append(" ").append(utente.getNome());
-				model.addAttribute("errore", stringBuilder.toString());
-				model.addAttribute("utente", new Utente());
-				return "login";
+				model.addAttribute(ERR_COSTANT, stringBuilder.toString());
+				model.addAttribute(UTENTE_COSTANT, new Utente());
+				return LOGIN_COSTANT;
 			} else if (utente.getStato() == 0) {
 				stringBuilder.append("Utente disattivato");
-				model.addAttribute("errore", stringBuilder.toString());
-				model.addAttribute("utente", new Utente());
-				return "login";
+				model.addAttribute(ERR_COSTANT, stringBuilder.toString());
+				model.addAttribute(UTENTE_COSTANT, new Utente());
+				return LOGIN_COSTANT;
 			}
 		} else {
 			stringBuilder.append("Utente non esistente");
-			model.addAttribute("errore", stringBuilder.toString());
-			model.addAttribute("utente", new Utente());
-			return "login";
+			model.addAttribute(ERR_COSTANT, stringBuilder.toString());
+			model.addAttribute(UTENTE_COSTANT, new Utente());
+			return LOGIN_COSTANT;
 		}
 		attivitaPrenotate = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 0);
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
-		model.addAttribute("utente", utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
+		model.addAttribute(UTENTE_COSTANT, utente);
 		return "home";
 	}
 
 	@RequestMapping(value = "/profilo", method = RequestMethod.GET)
 	public String profilo(Model model) {
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
-		model.addAttribute("utente", utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
+		model.addAttribute(UTENTE_COSTANT, utente);
 		if(errore!= null) {
-			model.addAttribute("errore", errore);
+			model.addAttribute(ERR_COSTANT, errore);
 		}
 		return "profilo";
 	}
 
 	@RequestMapping(value = "/salvaUtente", method = RequestMethod.POST)
-	private String salvaUtente(@Valid @ModelAttribute("utente") Utente utenteUpdate, BindingResult result,
+	private String salvaUtente(@Valid @ModelAttribute(UTENTE_COSTANT) Utente utenteUpdate, BindingResult result,
 			Model model) {
 		errore= null;
 		if (!result.hasErrors()) {
@@ -134,16 +156,16 @@ public class CiceroneController {
 				errore="Email già esistente";
 			}
 		} else {
-				errore = "Errore nei campi inseriti";
+				errore = ERRORE_COST;
 		}
 		return "redirect:/profilo";
 	}
 
 	@RequestMapping(value = "/salvaAttivita", method = RequestMethod.POST)
-	private String salvaAttivita(@Valid @ModelAttribute("attivita") Attivita attivita, BindingResult result,
+	private String salvaAttivita(@Valid @ModelAttribute(ATTIVITA_COST) Attivita attivita, BindingResult result,
 			Model model) {
-		model.addAttribute("utente", utente);
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		if (!result.hasErrors()) {
 			if (attivita.getIdAttivita() != 0) {
 				dbQuery.salvaAttivita(attivita);
@@ -152,14 +174,14 @@ public class CiceroneController {
 			}
 			return "redirect:/attivita";
 		}
-		model.addAttribute("errore", "Errore nei campi inseriti");
-		return "modifica-attivita";
+		model.addAttribute(ERR_COSTANT, ERRORE_COST);
+		return ATTIVITA_MOD;
 	}
 
 	@RequestMapping(value = "/pageRicercaAttivita", method = RequestMethod.GET)
 	private String pageRicercaAttivita(Model model) {
-		model.addAttribute("utente", utente);
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return "ricerca-attivita";
 	}
 
@@ -171,36 +193,36 @@ public class CiceroneController {
 		parametri.put("citta", request.getParameter("citta"));
 		parametri.put("prezzo", request.getParameter("prezzo"));
 		parametri.put("data", request.getParameter("data"));
-		model.addAttribute("utente", utente);
+		model.addAttribute(UTENTE_COSTANT, utente);
 		List<AttivitaRicercate> attivita = dbQuery.ricercaAttivita(parametri, utente.getIdUtente());
-		model.addAttribute("attivitaList", attivita);
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
+		model.addAttribute(ATT_COSTANT, attivita);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return "ricerca-attivita";
 	}
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	private String home(Model model) {
 		attivitaPrenotate = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 0);
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
-		model.addAttribute("utente", utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
+		model.addAttribute(UTENTE_COSTANT, utente);
 		return "home";
 	}
 
 	@RequestMapping(value = "/attivita", method = RequestMethod.GET)
 	private String attivita(Model model) {
 		attivitaList = dbQuery.trovaAttivita(utente.getIdUtente());
-		model.addAttribute("utente", utente);
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
-		model.addAttribute("attivitaList", attivitaList);
-		return "attivita";
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
+		model.addAttribute(ATT_COSTANT, attivitaList);
+		return ATTIVITA_COST;
 	}
 	
 	@RequestMapping(value = "/attivitaSalvate", method = RequestMethod.GET)
 	private String attivitaSalvate(Model model) {
 		List<AttivitaRicercate> attivitaSalvate = dbQuery.trovaAttivitaSalvate(utente.getIdUtente());
-		model.addAttribute("utente", utente);
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
-		model.addAttribute("attivitaList", attivitaSalvate);
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
+		model.addAttribute(ATT_COSTANT, attivitaSalvate);
 		return "attivita-salvate";
 	}
 
@@ -227,13 +249,13 @@ public class CiceroneController {
 	public String deletePrenotazione(@PathVariable int id) {
 		dbQuery.updateStato("annullata", id);
 		aggiornaPosti(id);
-		return "redirect:/attivitaPrenotate";
+		return REDIRECT_COST;
 	}
 	
 	@RequestMapping(value = "eliminaPrenotazione/{id}", method = RequestMethod.GET)
 	public String eliminaPrenotazione(@PathVariable int id) {
 		dbQuery.deletePrenotazione(id);
-		return "redirect:/attivitaPrenotate";
+		return REDIRECT_COST;
 	}
 	
 	@RequestMapping(value = "doEliminaAttivitaSalvata/{id}", method = RequestMethod.GET)
@@ -253,26 +275,26 @@ public class CiceroneController {
 	@RequestMapping(value = "doModify/{id}", method = RequestMethod.GET)
 	public String modificaAttivita(@PathVariable int id, Model model) {
 		estraiAttivita(id);
-		model.addAttribute("attivita", estraiAttivita(id));
-		model.addAttribute("utente", utente);
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
-		return "modifica-attivita";
+		model.addAttribute(ATTIVITA_COST, estraiAttivita(id));
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
+		return ATTIVITA_MOD;
 	}
 
 	@RequestMapping(value = "/aggiungiAttivita", method = RequestMethod.GET)
 	public String creaAttivita(Model model) {
-		model.addAttribute("attivita", new Attivita());
-		model.addAttribute("utente", utente);
-		model.addAttribute("attivitaListPrenotate", attivitaPrenotate);
-		return "modifica-attivita";
+		model.addAttribute(ATTIVITA_COST, new Attivita());
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
+		return ATTIVITA_MOD;
 	}
 
 	@RequestMapping(value = "/attivitaPrenotate", method = RequestMethod.GET)
 	public String attivitaPrenotate(Model model) {
-		List<AttivitaRicercate> attivitaPrenotate = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 1);
-		model.addAttribute("attivitaList", attivitaPrenotate);
-		model.addAttribute("utente", utente);
-		model.addAttribute("attivitaListPrenotate", this.attivitaPrenotate);
+		List<AttivitaRicercate> attivitaPrenotateUtente = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 1);
+		model.addAttribute(ATT_COSTANT, attivitaPrenotateUtente);
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, this.attivitaPrenotate);
 		return "attivita-prenotate";
 	}
 
@@ -286,15 +308,15 @@ public class CiceroneController {
 	@RequestMapping(value = "/inviaFeedback", method = RequestMethod.POST)
 	public String inviaFeedback (@RequestParam("idCicerone") int idCicerone, @RequestParam("valutazione") float valutazione, @RequestParam("descrizione") String descrizione) {
 			dbQuery.inserisciFeedback(utente.getIdUtente(), idCicerone, valutazione, descrizione);
-		return "redirect:/attivitaPrenotate";
+		return REDIRECT_COST;
 	}
 	
 	@RequestMapping(value = "/feedback", method = RequestMethod.GET)
 	public String feedback(Model model) {
-		List<Feedback> feedback = dbQuery.trovaFeedback(utente.getIdUtente());
-		model.addAttribute("feedbackList", feedback);
-		model.addAttribute("utente", utente);
-		model.addAttribute("attivitaListPrenotate", this.attivitaPrenotate);
+		List<Feedback> feedbackUtente =  dbQuery.trovaFeedback(utente.getIdUtente());
+		model.addAttribute("feedbackList", feedbackUtente);
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, this.attivitaPrenotate);
 		model.addAttribute("torna", false);
 		return "feedback";
 	}
@@ -303,8 +325,8 @@ public class CiceroneController {
 	public String pageFeedback(Model model) {
 		model.addAttribute("torna", true);
 		model.addAttribute("feedbackList", feedback);
-		model.addAttribute("utente", utente);
-		model.addAttribute("attivitaListPrenotate", this.attivitaPrenotate);
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, this.attivitaPrenotate);
 		return "feedback";
 	}
 	
@@ -329,7 +351,6 @@ public class CiceroneController {
 			dbQuery.updatePostiPrenotazione(Integer.valueOf(idAttiv),
 					attivita.getPostiPrenotati() + Integer.valueOf(numPartecipanti));
 			attivita = dbQuery.ricercaAttivitaPrenotate(Integer.valueOf(idAttiv), 3).get(0);
-			;
 			String emailCicerone = dbQuery.trovaEmailUtente(Integer.valueOf(idAttiv));
 			StringBuilder stringBuilder = new StringBuilder("L'utente ").append(utente.getNome()).append(" ")
 					.append(utente.getCognome()).append(" richiede di prenotare l'attività : ")
@@ -340,11 +361,11 @@ public class CiceroneController {
 			try {
 				emailProvider.send(emailCicerone, "Richiesta prenotazione attivita", stringBuilder.toString());
 			} catch (MessagingException e) {
-				model.addAttribute("errore", "Errore nell'invio dell'email");
+				model.addAttribute(ERR_COSTANT, "Errore nell'invio dell'email");
 				return "redirect:/pageRicercaAttivita";
 			}
 		} else {
-			model.addAttribute("errore", "Posti prenotati maggiori al numero massimo");
+			model.addAttribute(ERR_COSTANT, "Posti prenotati maggiori al numero massimo");
 		}
 		if(tipologia.equalsIgnoreCase("Salvate")){
 			return "redirect:/doEliminaAttivitaSalvata/"+idAttivitaSalvate;
