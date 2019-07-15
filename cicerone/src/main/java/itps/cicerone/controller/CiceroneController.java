@@ -67,7 +67,8 @@ public class CiceroneController {
 
 	@GetMapping(value = "/login")
 	public String homePage(Model model) {
-		model.addAttribute(UTENTE_COSTANT, new Utente());
+		utente = new Utente();
+		model.addAttribute(UTENTE_COSTANT, utente);
 		return LOGIN_COSTANT;
 	}
 	
