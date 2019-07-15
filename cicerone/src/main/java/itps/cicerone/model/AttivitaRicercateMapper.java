@@ -8,11 +8,24 @@ import java.util.List;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 public class AttivitaRicercateMapper implements ResultSetExtractor<List<AttivitaRicercate>> {
+	
+	String tipologia = "";
+	
+	public AttivitaRicercateMapper(String tipologia) {
+		this.tipologia = tipologia;
+	}
 
 	public List<AttivitaRicercate> extractData(ResultSet rs) throws SQLException {
 		List<AttivitaRicercate> attivitaList= new ArrayList<AttivitaRicercate>();
 		while(rs.next()){
 			AttivitaRicercate attivita = new AttivitaRicercate();
+			if(tipologia.equalsIgnoreCase("salvate")) {
+				attivita.setIdAttivitaSalvate(rs.getInt("idattivita_salvata"));
+			}
+			if(tipologia.equalsIgnoreCase("prenotazioni")) {
+				attivita.setIdPrenotazione(rs.getInt("id_prenotazione"));
+				attivita.setStato(rs.getString("Stato"));
+			}
 			attivita.setCitta(rs.getString("Citta"));
 			attivita.setDescrizione(rs.getString("Descrizione"));
 			attivita.setIdAttivita(rs.getInt("id_attivita"));

@@ -11,12 +11,8 @@ import org.springframework.stereotype.Component;
 
 import itps.cicerone.model.Attivita;
 import itps.cicerone.model.AttivitaMapper;
-import itps.cicerone.model.AttivitaPrenotateMapper;
 import itps.cicerone.model.AttivitaRicercate;
 import itps.cicerone.model.AttivitaRicercateMapper;
-import itps.cicerone.model.AttivitaSalvateMapper;
-import itps.cicerone.model.Feedback;
-import itps.cicerone.model.FeedbackMapper;
 import itps.cicerone.model.Utente;
 import itps.cicerone.model.UtenteMapper;
 
@@ -62,16 +58,11 @@ public class DbQuery {
 
 	private static final String INSERT_ATTIVITA_SALVATE = "INSERT INTO attivita_salvate (id_utente, id_attivita, id_cicerone) VALUES (?, ?, ?)";
 	
-	private static final String ATTIVITA_SALVATE = "select idattivita_salvata, utenti.nome, utenti.cognome,utenti.Email, attivita.* from cicerone.attivita_salvate left join utenti on utenti.id_utente = attivita_salvate.id_utente left join attivita on attivita.id_attivita=attivita_salvate.id_attivita where attivita_salvate.id_utente=?";
+	private static final String ATTIVITA_SALVATE = "select idattivita_salvata, utenti.nome as NomeCicerone, utenti.cognome,utenti.Email, attivita.* from cicerone.attivita_salvate left join utenti on utenti.id_utente = attivita_salvate.id_utente left join attivita on attivita.id_attivita=attivita_salvate.id_attivita where attivita_salvate.id_utente=?";
 	
 	private static final String DELETE_ATTIVITA_SALVATE = "DELETE FROM attivita_salvate WHERE (idattivita_salvata = ?)";
 	
-	private static final String INSERT_FEEDBACK = "INSERT INTO feedback (id_utente, id_cicerone, punteggio, didascalia) VALUES (?, ?, ?, ?)";
-	
 	private static final String DELETE_PRENOTAZIONE = "DELETE FROM prenotazioni WHERE (id_prenotazione = ?)";
-	
-	private static final String SELECT_FEEDBACK= "select nome, cognome, punteggio, didascalia from cicerone.feedback left join utenti on utenti.id_utente = feedback.id_utente where id_cicerone=?";
-	
 	
 	private static final String AND=" and ";
 	
@@ -79,12 +70,9 @@ public class DbQuery {
 		return jdbc.query(SELECT_UTENTE_BY_EMAIL, new UtenteMapper(), email);
 	}
 	
-	public List<Feedback> trovaFeedback(int idCicerone) {
-		return jdbc.query(SELECT_FEEDBACK, new FeedbackMapper(), idCicerone);
-	}
 	
 	public List<AttivitaRicercate> trovaAttivitaSalvate(int idUtente) {
-		return jdbc.query(ATTIVITA_SALVATE, new AttivitaSalvateMapper(), idUtente);
+		return jdbc.query(ATTIVITA_SALVATE, new AttivitaRicercateMapper("salvate"), idUtente);
 	}
 
 	public int trovaIDUtente(String email) {
@@ -125,10 +113,6 @@ public class DbQuery {
 		jdbc.update(INSERT_ATTIVITA_SALVATE, idUtente, idAttivita, idCicerone);
 	}
 	
-	public void inserisciFeedback(int idUtente, int idCicerone, float valutazione, String descrizione) {
-		jdbc.update(INSERT_FEEDBACK, idUtente, idCicerone, valutazione, descrizione);
-	}
-
 	public Map<String, Object> selectPosti(int idAttivita) {
 		List<Map<String, Object>> list = jdbc.queryForList(SELECT_NUM_POSTI, idAttivita);
 		return list.get(0);
@@ -179,12 +163,12 @@ public class DbQuery {
 	}
 
 	public List<AttivitaRicercate> ricercaAttivita(Map<String, String> parametri, int idUtente) {
-		return jdbc.query(createQuerySearchAttivita(parametri, idUtente), new AttivitaRicercateMapper(), null);
+		return jdbc.query(createQuerySearchAttivita(parametri, idUtente), new AttivitaRicercateMapper("ricercate"), null);
 	}
 
 	public List<AttivitaRicercate> ricercaAttivitaPrenotate(int id, int tipologia) {
 		StringBuilder sql = new StringBuilder(
-				"SELECT id_prenotazione, prenotazioni.Stato, Num_partecipanti, attivita.*, utenti.nome, utenti.cognome, utenti.Email FROM cicerone.prenotazioni ,cicerone.attivita, cicerone.utenti where prenotazioni.id_attivita = attivita.id_attivita and prenotazioni.id_cicerone = utenti.id_utente ");
+				"SELECT id_prenotazione, prenotazioni.Stato, Num_partecipanti, attivita.*, utenti.nome as NomeCicerone, utenti.cognome, utenti.Email FROM cicerone.prenotazioni ,cicerone.attivita, cicerone.utenti where prenotazioni.id_attivita = attivita.id_attivita and prenotazioni.id_cicerone = utenti.id_utente ");
 		if (tipologia == 0) {
 			sql.append("and prenotazioni.id_cicerone=? and prenotazioni.Stato = 'in attesa'");
 		} else if (tipologia == 1) {
@@ -192,7 +176,7 @@ public class DbQuery {
 		} else {
 			sql.append("and prenotazioni.id_attivita=? ");
 		}
-		return jdbc.query(sql.toString(), new AttivitaPrenotateMapper(), id);
+		return jdbc.query(sql.toString(), new AttivitaRicercateMapper("prenotazioni"), id);
 	}
 
 	public void inserisciPrenotazione(int idAttivita, int idUtente, int idCicerone, int numPartecipanti) {
