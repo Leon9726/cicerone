@@ -8,10 +8,10 @@
 				var cognome = '[[${utente.cognome}]]';
 				var span = document.getElementById('userSpanId');
 				span.appendChild(document.createTextNode(nome + ' ' + cognome));
-				let attivita = '[[${attivitaListPrenotate}]]';
-				if(attivita.length != 2) { 
+				let attivita = '[[${prenotazioni}]]';
+				if(attivita != 0) { 
 					var span = document.getElementById('numNotifiche');
-					span.appendChild(document.createTextNode(attivita.length/48));
+					span.appendChild(document.createTextNode(attivita));
 				}
 				if( nome == 'Ospite') {
 					document.getElementById("ricercaAttivita").style.display = "none";

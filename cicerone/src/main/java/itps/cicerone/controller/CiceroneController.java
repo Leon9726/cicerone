@@ -43,6 +43,8 @@ public class CiceroneController {
 
 	List<AttivitaRicercate> attivitaPrenotate = new ArrayList<AttivitaRicercate>();
 	
+	int countPrenotazioni = 0;
+	
 	List<Feedback> feedback = new ArrayList<Feedback>();
 	
 	private static final String UTENTE_COSTANT="utente";
@@ -50,6 +52,8 @@ public class CiceroneController {
 	private static final String LOGIN_COSTANT="login";
 	
 	private static final String ATT_PREN_COSTANT="attivitaListPrenotate";
+	
+	private static final String COUNT_PRENOTAZIONI="prenotazioni";
 	
 	private static final String ATT_COSTANT="attivitaList";
 	
@@ -76,14 +80,12 @@ public class CiceroneController {
 	public String entraOspite(Model model) {
 		utente.setNome("Ospite");
 		model.addAttribute(UTENTE_COSTANT, utente);
-		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return "home";
 	}
 
 	@PostMapping(value = "/registra")
 	public String registraUtente(@Valid @ModelAttribute(UTENTE_COSTANT) Utente utenteValid, BindingResult result,
 			Model model) {
-		model.addAttribute(ATT_COSTANT, attivitaPrenotate);
 		if (result.hasErrors()) {
 			model.addAttribute(ERR_COSTANT, ERRORE_COST);
 			model.addAttribute(IS_REGISTRA, true);
@@ -95,6 +97,8 @@ public class CiceroneController {
 			dbQuery.inserisciUtente(utente);
 			utente.setIdUtente(dbQuery.trovaIDUtente(utente.getEmail()));
 			attivitaPrenotate = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 0);
+			countPrenotazioni = dbQuery.countPrenotazioni(utente.getIdUtente());
+			model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 			model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 			model.addAttribute(UTENTE_COSTANT, utente);
 			model.addAttribute(IS_REGISTRA, false);
@@ -127,6 +131,8 @@ public class CiceroneController {
 			model.addAttribute(UTENTE_COSTANT, new Utente());
 			return LOGIN_COSTANT;
 		}
+		countPrenotazioni = dbQuery.countPrenotazioni(utente.getIdUtente());
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		attivitaPrenotate = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 0);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		model.addAttribute(UTENTE_COSTANT, utente);
@@ -135,6 +141,7 @@ public class CiceroneController {
 
 	@GetMapping(value = "/profilo")
 	public String profilo(Model model) {
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		model.addAttribute(UTENTE_COSTANT, utente);
 		if(errore!= null) {
@@ -164,6 +171,7 @@ public class CiceroneController {
 	public String salvaAttivita(@Valid @ModelAttribute(ATTIVITA_COST) Attivita attivita, BindingResult result,
 			Model model) {
 		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		if (!result.hasErrors()) {
 			if (attivita.getIdAttivita() != 0) {
@@ -180,6 +188,7 @@ public class CiceroneController {
 	@GetMapping(value = "/pageRicercaAttivita")
 	public String pageRicercaAttivita(Model model) {
 		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return "ricerca-attivita";
 	}
@@ -195,12 +204,15 @@ public class CiceroneController {
 		model.addAttribute(UTENTE_COSTANT, utente);
 		List<AttivitaRicercate> attivita = dbQuery.ricercaAttivita(parametri, utente.getIdUtente());
 		model.addAttribute(ATT_COSTANT, attivita);
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return "ricerca-attivita";
 	}
 
 	@GetMapping(value = "/home")
 	public String home(Model model) {
+		countPrenotazioni = dbQuery.countPrenotazioni(utente.getIdUtente());
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		attivitaPrenotate = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 0);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		model.addAttribute(UTENTE_COSTANT, utente);
@@ -211,6 +223,7 @@ public class CiceroneController {
 	public String attivita(Model model) {
 		attivitaList = dbQuery.trovaAttivita(utente.getIdUtente());
 		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		model.addAttribute(ATT_COSTANT, attivitaList);
 		return ATTIVITA_COST;
@@ -220,6 +233,7 @@ public class CiceroneController {
 	public String attivitaSalvate(Model model) {
 		List<AttivitaRicercate> attivitaSalvate = dbQuery.trovaAttivitaSalvate(utente.getIdUtente());
 		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		model.addAttribute(ATT_COSTANT, attivitaSalvate);
 		return "attivita-salvate";
@@ -276,6 +290,7 @@ public class CiceroneController {
 		estraiAttivita(id);
 		model.addAttribute(ATTIVITA_COST, estraiAttivita(id));
 		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return ATTIVITA_MOD;
 	}
@@ -284,6 +299,7 @@ public class CiceroneController {
 	public String creaAttivita(Model model) {
 		model.addAttribute(ATTIVITA_COST, new Attivita());
 		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return ATTIVITA_MOD;
 	}
@@ -293,6 +309,7 @@ public class CiceroneController {
 		List<AttivitaRicercate> attivitaPrenotateUtente = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 1);
 		model.addAttribute(ATT_COSTANT, attivitaPrenotateUtente);
 		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, this.attivitaPrenotate);
 		return "attivita-prenotate";
 	}
@@ -315,6 +332,7 @@ public class CiceroneController {
 		List<Feedback> feedbackUtente =  dbQuery.trovaFeedback(utente.getIdUtente());
 		model.addAttribute("feedbackList", feedbackUtente);
 		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, this.attivitaPrenotate);
 		model.addAttribute("torna", false);
 		return "feedback";
@@ -325,6 +343,7 @@ public class CiceroneController {
 		model.addAttribute("torna", true);
 		model.addAttribute("feedbackList", feedback);
 		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, this.attivitaPrenotate);
 		return "feedback";
 	}

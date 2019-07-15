@@ -70,6 +70,8 @@ public class DbQuery {
 	
 	private static final String SELECT_FEEDBACK= "select nome, cognome, punteggio, didascalia from cicerone.feedback left join utenti on utenti.id_utente = feedback.id_utente where id_cicerone=?";
 	
+	private static final String COUNT_PRENOTAZIONE= "SELECT count(id_prenotazione) FROM cicerone.prenotazioni where id_cicerone=? and Stato = 'in attesa';";
+	
 	private static final String AND=" and ";
 	
 	public Utente trovaUtente(String email) {
@@ -86,6 +88,10 @@ public class DbQuery {
 
 	public int trovaIDUtente(String email) {
 		return jdbc.queryForObject(SELECT_ID_UTENTE_BY_EMAIL, new Object[] { email }, Integer.class);
+	}
+	
+	public int countPrenotazioni(int id) {
+		return jdbc.queryForObject(COUNT_PRENOTAZIONE, new Object[] { id }, Integer.class);
 	}
 
 	public String trovaEmailUtente(int idAttivita) {

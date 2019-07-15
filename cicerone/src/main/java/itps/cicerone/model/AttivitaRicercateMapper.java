@@ -25,6 +25,7 @@ public class AttivitaRicercateMapper implements ResultSetExtractor<List<Attivita
 			if(tipologia.equalsIgnoreCase("prenotazioni")) {
 				attivita.setIdPrenotazione(rs.getInt("id_prenotazione"));
 				attivita.setStato(rs.getString("Stato"));
+				attivita.setPartecipantiPrenotati(rs.getInt("Num_partecipanti"));
 			}
 			attivita.setCitta(rs.getString("Citta"));
 			attivita.setDescrizione(rs.getString("Descrizione"));
