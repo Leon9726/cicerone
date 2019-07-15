@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import itps.cicerone.email.EmailProvider;
 import itps.cicerone.model.Attivita;
 import itps.cicerone.model.AttivitaRicercate;
+import itps.cicerone.model.Feedback;
 import itps.cicerone.model.Utente;
 import itps.cicerone.persistance.DbQuery;
 
@@ -41,6 +42,8 @@ public class CiceroneController {
 	List<Attivita> attivitaList = new ArrayList<Attivita>();
 
 	List<AttivitaRicercate> attivitaPrenotate = new ArrayList<AttivitaRicercate>();
+	
+	List<Feedback> feedback = new ArrayList<Feedback>();
 	
 	private static final String UTENTE_COSTANT="utente";
 	
@@ -298,6 +301,37 @@ public class CiceroneController {
 		dbQuery.disattivaProfilo(utente.getIdUtente());
 		utente = new Utente();
 		return "redirect:/login";
+	}
+	
+	@PostMapping(value = "/inviaFeedback")
+	public String inviaFeedback (@RequestParam("idCicerone") int idCicerone, @RequestParam("valutazione") float valutazione, @RequestParam("descrizione") String descrizione) {
+			dbQuery.inserisciFeedback(utente.getIdUtente(), idCicerone, valutazione, descrizione);
+		return REDIRECT_COST;
+	}
+	
+	@GetMapping(value = "/feedback")
+	public String feedback(Model model) {
+		List<Feedback> feedbackUtente =  dbQuery.trovaFeedback(utente.getIdUtente());
+		model.addAttribute("feedbackList", feedbackUtente);
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, this.attivitaPrenotate);
+		model.addAttribute("torna", false);
+		return "feedback";
+	}
+	
+	@GetMapping(value = "/pageFeedback")
+	public String pageFeedback(Model model) {
+		model.addAttribute("torna", true);
+		model.addAttribute("feedbackList", feedback);
+		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, this.attivitaPrenotate);
+		return "feedback";
+	}
+	
+	@GetMapping(value = "trovaFeedback/{id}")
+	public String feedback(Model model, @PathVariable int id) {
+		feedback = dbQuery.trovaFeedback(id);
+		return "redirect:/pageFeedback";
 	}
 	
 	@PostMapping(value = "/prenotaAttivita")

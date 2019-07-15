@@ -13,6 +13,8 @@ import itps.cicerone.model.Attivita;
 import itps.cicerone.model.AttivitaMapper;
 import itps.cicerone.model.AttivitaRicercate;
 import itps.cicerone.model.AttivitaRicercateMapper;
+import itps.cicerone.model.Feedback;
+import itps.cicerone.model.FeedbackMapper;
 import itps.cicerone.model.Utente;
 import itps.cicerone.model.UtenteMapper;
 
@@ -62,7 +64,11 @@ public class DbQuery {
 	
 	private static final String DELETE_ATTIVITA_SALVATE = "DELETE FROM attivita_salvate WHERE (idattivita_salvata = ?)";
 	
+	private static final String INSERT_FEEDBACK = "INSERT INTO feedback (id_utente, id_cicerone, punteggio, didascalia) VALUES (?, ?, ?, ?)";
+	
 	private static final String DELETE_PRENOTAZIONE = "DELETE FROM prenotazioni WHERE (id_prenotazione = ?)";
+	
+	private static final String SELECT_FEEDBACK= "select nome, cognome, punteggio, didascalia from cicerone.feedback left join utenti on utenti.id_utente = feedback.id_utente where id_cicerone=?";
 	
 	private static final String AND=" and ";
 	
@@ -70,6 +76,9 @@ public class DbQuery {
 		return jdbc.query(SELECT_UTENTE_BY_EMAIL, new UtenteMapper(), email);
 	}
 	
+	public List<Feedback> trovaFeedback(int idCicerone) {
+		return jdbc.query(SELECT_FEEDBACK, new FeedbackMapper(), idCicerone);
+	}
 	
 	public List<AttivitaRicercate> trovaAttivitaSalvate(int idUtente) {
 		return jdbc.query(ATTIVITA_SALVATE, new AttivitaRicercateMapper("salvate"), idUtente);
@@ -111,6 +120,10 @@ public class DbQuery {
 	
 	public void inserisciAttivitaSalvata(int idAttivita, int idUtente, int idCicerone) {
 		jdbc.update(INSERT_ATTIVITA_SALVATE, idUtente, idAttivita, idCicerone);
+	}
+	
+	public void inserisciFeedback(int idUtente, int idCicerone, float valutazione, String descrizione) {
+		jdbc.update(INSERT_FEEDBACK, idUtente, idCicerone, valutazione, descrizione);
 	}
 	
 	public Map<String, Object> selectPosti(int idAttivita) {
