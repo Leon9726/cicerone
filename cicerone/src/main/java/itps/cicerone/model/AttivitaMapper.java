@@ -5,12 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 public class AttivitaMapper implements ResultSetExtractor<List<Attivita>> {
 
-	public List<Attivita> extractData(ResultSet rs) throws SQLException, DataAccessException {
+	public List<Attivita> extractData(ResultSet rs) throws SQLException {
 		List<Attivita> attivitaList= new ArrayList<Attivita>();
 		while(rs.next()){
 			Attivita attivita = new Attivita();

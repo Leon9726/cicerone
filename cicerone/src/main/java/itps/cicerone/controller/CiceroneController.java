@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,13 +69,13 @@ public class CiceroneController {
 	
 	private static final String REDIRECT_COST="redirect:/attivitaPrenotate";
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@GetMapping(value = "/login")
 	public String homePage(Model model) {
 		model.addAttribute(UTENTE_COSTANT, new Utente());
 		return LOGIN_COSTANT;
 	}
 	
-	@RequestMapping(value = "/entraOspite", method = RequestMethod.GET)
+	@GetMapping(value = "/entraOspite")
 	public String entraOspite(Model model) {
 		utente.setNome("Ospite");
 		model.addAttribute(UTENTE_COSTANT, utente);
@@ -81,7 +83,7 @@ public class CiceroneController {
 		return "home";
 	}
 
-	@RequestMapping(value = "/registra", method = RequestMethod.POST)
+	@PostMapping(value = "/registra")
 	public String registraUtente(@Valid @ModelAttribute(UTENTE_COSTANT) Utente utenteValid, BindingResult result,
 			Model model) {
 		model.addAttribute(ATT_COSTANT, attivitaPrenotate);
@@ -105,7 +107,7 @@ public class CiceroneController {
 		return LOGIN_COSTANT;
 	}
 
-	@RequestMapping(value = "/entra", method = RequestMethod.POST)
+	@PostMapping(value = "/entra")
 	public String entra(@RequestParam("emaiLogin") String email, @RequestParam("pwdLogin") String pwd, Model model) {
 		StringBuilder stringBuilder = new StringBuilder("");
 		utente = dbQuery.trovaUtente(email);
@@ -134,7 +136,7 @@ public class CiceroneController {
 		return "home";
 	}
 
-	@RequestMapping(value = "/profilo", method = RequestMethod.GET)
+	@GetMapping(value = "/profilo")
 	public String profilo(Model model) {
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		model.addAttribute(UTENTE_COSTANT, utente);
@@ -144,7 +146,7 @@ public class CiceroneController {
 		return "profilo";
 	}
 
-	@RequestMapping(value = "/salvaUtente", method = RequestMethod.POST)
+	@PostMapping(value = "/salvaUtente")
 	public String salvaUtente(@Valid @ModelAttribute(UTENTE_COSTANT) Utente utenteUpdate, BindingResult result,
 			Model model) {
 		errore= null;
@@ -161,7 +163,7 @@ public class CiceroneController {
 		return "redirect:/profilo";
 	}
 
-	@RequestMapping(value = "/salvaAttivita", method = RequestMethod.POST)
+	@PostMapping(value = "/salvaAttivita")
 	public String salvaAttivita(@Valid @ModelAttribute(ATTIVITA_COST) Attivita attivita, BindingResult result,
 			Model model) {
 		model.addAttribute(UTENTE_COSTANT, utente);
@@ -178,14 +180,14 @@ public class CiceroneController {
 		return ATTIVITA_MOD;
 	}
 
-	@RequestMapping(value = "/pageRicercaAttivita", method = RequestMethod.GET)
+	@GetMapping(value = "/pageRicercaAttivita")
 	public String pageRicercaAttivita(Model model) {
 		model.addAttribute(UTENTE_COSTANT, utente);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return "ricerca-attivita";
 	}
 
-	@RequestMapping(value = "/ricercaAttivita", method = RequestMethod.POST)
+	@PostMapping(value = "/ricercaAttivita")
 	public String ricercaAttivita(Model model, HttpServletRequest request) {
 		Map<String, String> parametri = new HashMap<String, String>();
 		parametri.put("nome", request.getParameter("nome"));
@@ -200,7 +202,7 @@ public class CiceroneController {
 		return "ricerca-attivita";
 	}
 
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	@GetMapping(value = "/home")
 	public String home(Model model) {
 		attivitaPrenotate = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 0);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
@@ -208,7 +210,7 @@ public class CiceroneController {
 		return "home";
 	}
 
-	@RequestMapping(value = "/attivita", method = RequestMethod.GET)
+	@GetMapping(value = "/attivita")
 	public String attivita(Model model) {
 		attivitaList = dbQuery.trovaAttivita(utente.getIdUtente());
 		model.addAttribute(UTENTE_COSTANT, utente);
@@ -217,7 +219,7 @@ public class CiceroneController {
 		return ATTIVITA_COST;
 	}
 	
-	@RequestMapping(value = "/attivitaSalvate", method = RequestMethod.GET)
+	@GetMapping(value = "/attivitaSalvate")
 	public String attivitaSalvate(Model model) {
 		List<AttivitaRicercate> attivitaSalvate = dbQuery.trovaAttivitaSalvate(utente.getIdUtente());
 		model.addAttribute(UTENTE_COSTANT, utente);
@@ -226,53 +228,53 @@ public class CiceroneController {
 		return "attivita-salvate";
 	}
 
-	@RequestMapping(value = "doDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "doDelete/{id}")
 	public String deleteAttivita(@PathVariable int id) {
 		dbQuery.deleteAttivita(id);
 		return "redirect:/attivita";
 	}
 
-	@RequestMapping(value = "doConfermaPrenotazione/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "doConfermaPrenotazione/{id}")
 	public String confermaPrenotazione(@PathVariable int id) {
 		dbQuery.updateStato("accettata", id);
 		return "redirect:/home";
 	}
 	
-	@RequestMapping(value = "doRifiutaPrenotazione/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "doRifiutaPrenotazione/{id}")
 	public String rifiutaPrenotazione(@PathVariable int id) {
 		dbQuery.updateStato("respinta", id);
 		aggiornaPosti(id);
 		return "redirect:/home";
 	}
 
-	@RequestMapping(value = "doDeletePrenotazione/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "doDeletePrenotazione/{id}")
 	public String deletePrenotazione(@PathVariable int id) {
 		dbQuery.updateStato("annullata", id);
 		aggiornaPosti(id);
 		return REDIRECT_COST;
 	}
 	
-	@RequestMapping(value = "eliminaPrenotazione/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "eliminaPrenotazione/{id}")
 	public String eliminaPrenotazione(@PathVariable int id) {
 		dbQuery.deletePrenotazione(id);
 		return REDIRECT_COST;
 	}
 	
-	@RequestMapping(value = "doEliminaAttivitaSalvata/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "doEliminaAttivitaSalvata/{id}")
 	public String deleteAttivitaSalvata(@PathVariable int id) {
 		dbQuery.deleteAttivitaSalvata(id);
 		return "redirect:/attivitaSalvate";
 	}
 	
 	
-	@RequestMapping(value = "doSalvaAttivita/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "doSalvaAttivita/{id}")
 	public String salvaAttivita(@PathVariable int id) {
 		Attivita attivita = dbQuery.trovaAttivitaId(id).get(0);
 		dbQuery.inserisciAttivitaSalvata(attivita.getIdAttivita(), utente.getIdUtente(), attivita.getIdCicerone());
 		return "redirect:/attivitaSalvate";
 	}
 
-	@RequestMapping(value = "doModify/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "doModify/{id}")
 	public String modificaAttivita(@PathVariable int id, Model model) {
 		estraiAttivita(id);
 		model.addAttribute(ATTIVITA_COST, estraiAttivita(id));
@@ -281,7 +283,7 @@ public class CiceroneController {
 		return ATTIVITA_MOD;
 	}
 
-	@RequestMapping(value = "/aggiungiAttivita", method = RequestMethod.GET)
+	@GetMapping(value = "/aggiungiAttivita")
 	public String creaAttivita(Model model) {
 		model.addAttribute(ATTIVITA_COST, new Attivita());
 		model.addAttribute(UTENTE_COSTANT, utente);
@@ -289,7 +291,7 @@ public class CiceroneController {
 		return ATTIVITA_MOD;
 	}
 
-	@RequestMapping(value = "/attivitaPrenotate", method = RequestMethod.GET)
+	@GetMapping(value = "/attivitaPrenotate")
 	public String attivitaPrenotate(Model model) {
 		List<AttivitaRicercate> attivitaPrenotateUtente = dbQuery.ricercaAttivitaPrenotate(utente.getIdUtente(), 1);
 		model.addAttribute(ATT_COSTANT, attivitaPrenotateUtente);
@@ -298,20 +300,20 @@ public class CiceroneController {
 		return "attivita-prenotate";
 	}
 
-	@RequestMapping(value = "/disattivaProfilo", method = RequestMethod.GET)
+	@GetMapping(value = "/disattivaProfilo")
 	public String disattivaProfilo(Model model) {
 		dbQuery.disattivaProfilo(utente.getIdUtente());
 		utente = new Utente();
 		return "redirect:/login";
 	}
 	
-	@RequestMapping(value = "/inviaFeedback", method = RequestMethod.POST)
+	@PostMapping(value = "/inviaFeedback")
 	public String inviaFeedback (@RequestParam("idCicerone") int idCicerone, @RequestParam("valutazione") float valutazione, @RequestParam("descrizione") String descrizione) {
 			dbQuery.inserisciFeedback(utente.getIdUtente(), idCicerone, valutazione, descrizione);
 		return REDIRECT_COST;
 	}
 	
-	@RequestMapping(value = "/feedback", method = RequestMethod.GET)
+	@GetMapping(value = "/feedback")
 	public String feedback(Model model) {
 		List<Feedback> feedbackUtente =  dbQuery.trovaFeedback(utente.getIdUtente());
 		model.addAttribute("feedbackList", feedbackUtente);
@@ -321,7 +323,7 @@ public class CiceroneController {
 		return "feedback";
 	}
 	
-	@RequestMapping(value = "/pageFeedback", method = RequestMethod.GET)
+	@GetMapping(value = "/pageFeedback")
 	public String pageFeedback(Model model) {
 		model.addAttribute("torna", true);
 		model.addAttribute("feedbackList", feedback);
@@ -330,13 +332,13 @@ public class CiceroneController {
 		return "feedback";
 	}
 	
-	@RequestMapping(value = "trovaFeedback/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "trovaFeedback/{id}")
 	public String feedback(Model model, @PathVariable int id) {
 		feedback = dbQuery.trovaFeedback(id);
 		return "redirect:/pageFeedback";
 	}
 
-	@RequestMapping(value = "/prenotaAttivita", method = RequestMethod.POST)
+	@PostMapping(value = "/prenotaAttivita")
 	public String prenotaAttivita(@RequestParam("idAttivita") String idAttiv, @RequestParam("idAttivitaSalvate") String idAttivitaSalvate, 
 			@RequestParam("idCicerone") String idCicerone, @RequestParam("partecipanti") String numPartecipanti, @RequestParam("tipologia") String tipologia,
 			Model model) {
@@ -393,7 +395,7 @@ public class CiceroneController {
 	}
 	
 	private void aggiornaPosti(int idPrenotazione) {
-		Map<String, Object> map = dbQuery.selectNumPrenotazioni(Integer.valueOf(idPrenotazione));
+		Map<String, Object> map = dbQuery.selectNumPrenotazioni(idPrenotazione);
 		int postiPrenotati= Integer.valueOf(String.valueOf(map.get("posti_prenotati"))) - Integer.valueOf(String.valueOf(map.get("Num_partecipanti")));
 		dbQuery.updatePostiPrenotazione(Integer.valueOf(String.valueOf(map.get("id_attivita"))), postiPrenotati);
 	}

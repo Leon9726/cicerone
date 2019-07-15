@@ -5,12 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 public class AttivitaRicercateMapper implements ResultSetExtractor<List<AttivitaRicercate>> {
 
-	public List<AttivitaRicercate> extractData(ResultSet rs) throws SQLException, DataAccessException {
+	public List<AttivitaRicercate> extractData(ResultSet rs) throws SQLException {
 		List<AttivitaRicercate> attivitaList= new ArrayList<AttivitaRicercate>();
 		while(rs.next()){
 			AttivitaRicercate attivita = new AttivitaRicercate();
@@ -24,7 +23,7 @@ public class AttivitaRicercateMapper implements ResultSetExtractor<List<Attivita
 			attivita.setNome(rs.getString("Nome"));
 			attivita.setProv(rs.getString("Prov"));
 			attivita.setPrezzo(rs.getString("Prezzo"));
-			attivita.setNomeCicerone(rs.getString("nome"));
+			attivita.setNomeCicerone(rs.getString("NomeCicerone"));
 			attivita.setCognomeCicerone(rs.getString("cognome"));
 			attivita.setEmail(rs.getString("Email"));
 			attivita.setPostiPrenotati(rs.getInt("posti_prenotati"));

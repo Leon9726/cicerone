@@ -174,7 +174,7 @@ public class DbQuery {
 	}
 
 	public void disattivaProfilo(int idUtente) {
-		jdbc.update(DISATTIVA_UTENTE, new Object[] { idUtente });
+		jdbc.update(DISATTIVA_UTENTE, idUtente );
 
 	}
 
@@ -202,23 +202,23 @@ public class DbQuery {
 	public String createQuerySearchAttivita(Map<String, String> parametri, int idUtente) {
 		List<String> chiavi = new ArrayList<String>();
 		StringBuilder sql = new StringBuilder(
-				"SELECT attivita.*, utenti.nome, utenti.cognome, utenti.Email from attivita LEFT JOIN utenti ON utenti.id_utente=attivita.id_cicerone  left join prenotazioni on attivita.id_attivita =prenotazioni.id_attivita where (prenotazioni.id_utente <> ")
+				"SELECT attivita.*, utenti.nome as NomeCicerone, utenti.cognome, utenti.Email from attivita LEFT JOIN utenti ON utenti.id_utente=attivita.id_cicerone  left join prenotazioni on attivita.id_attivita =prenotazioni.id_attivita where (prenotazioni.id_utente <> ")
 						.append("'").append(idUtente).append("'")
 						.append(" or prenotazioni.id_utente is null or prenotazioni.Stato = 'respinta') and Max_partecipanti <> attivita.posti_prenotati and ");
 		sql.append("'").append(idUtente).append("'").append("<> attivita.id_cicerone");
-		if (parametri.get("nome").equals("")) {
+		if (!parametri.get("nome").equals("")) {
 			chiavi.add("nome");
 		}
-		if (parametri.get("citta").equals("")) {
+		if (!parametri.get("citta").equals("")) {
 			chiavi.add("citta");
 		}
-		if (parametri.get("prov").equals("")) {
+		if (!parametri.get("prov").equals("")) {
 			chiavi.add("prov");
 		}
-		if (parametri.get("data").equals("")) {
+		if (!parametri.get("data").equals("")) {
 			chiavi.add("data");
 		}
-		if (parametri.get("prezzo").equals("")) {
+		if (!parametri.get("prezzo").equals("")) {
 			chiavi.add("prezzo");
 		}
 		for (int i = 0; i < chiavi.size(); i++) {

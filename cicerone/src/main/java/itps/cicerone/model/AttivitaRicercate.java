@@ -3,15 +3,6 @@ package itps.cicerone.model;
 import java.sql.Time;
 import java.util.Date;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.test.annotation.Timed;
-
 public class AttivitaRicercate {
 	
 	private int idPrenotazione;
