@@ -80,6 +80,7 @@ public class CiceroneController {
 	public String entraOspite(Model model) {
 		utente.setNome("Ospite");
 		model.addAttribute(UTENTE_COSTANT, utente);
+		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		return "home";
 	}
 
@@ -109,26 +110,28 @@ public class CiceroneController {
 	}
 
 	@PostMapping(value = "/entra")
-	public String entra(@RequestParam("emaiLogin") String email, @RequestParam("pwdLogin") String pwd, Model model) {
+	public String entra(@RequestParam("emailLogin") String email, @RequestParam("pwdLogin") String pwd, Model model) {
 		StringBuilder stringBuilder = new StringBuilder("");
 		utente = dbQuery.trovaUtente(email);
 		if (utente != null) {
 			if (!utente.getPassword().equals(pwd)) {
-				stringBuilder.append("Password non comabace per l'utente : ")
-						.append(utente.getCognome()).append(" ").append(utente.getNome());
+				stringBuilder.append("password");
 				model.addAttribute(ERR_COSTANT, stringBuilder.toString());
-				model.addAttribute(UTENTE_COSTANT, new Utente());
+				utente = new Utente();
+				model.addAttribute(UTENTE_COSTANT, utente);
 				return LOGIN_COSTANT;
 			} else if (utente.getStato() == 0) {
-				stringBuilder.append("Utente disattivato");
+				stringBuilder.append("disattivato");
 				model.addAttribute(ERR_COSTANT, stringBuilder.toString());
-				model.addAttribute(UTENTE_COSTANT, new Utente());
+				utente= new Utente();
+				model.addAttribute(UTENTE_COSTANT, utente);
 				return LOGIN_COSTANT;
 			}
 		} else {
-			stringBuilder.append("Utente non esistente");
+			stringBuilder.append("inesistente");
 			model.addAttribute(ERR_COSTANT, stringBuilder.toString());
-			model.addAttribute(UTENTE_COSTANT, new Utente());
+			utente= new Utente();
+			model.addAttribute(UTENTE_COSTANT, utente);
 			return LOGIN_COSTANT;
 		}
 		countPrenotazioni = dbQuery.countPrenotazioni(utente.getIdUtente());

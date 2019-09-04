@@ -32,10 +32,9 @@
 			<div class="login-show" style="padding-bottom: 70px;">
 				<h2>LOGIN</h2>
 				<form id="formLogin" action="#" th:action="@{/entra}" method="POST">
-					<input type="text" placeholder="Email" name="emaiLogin"
-						id="emailLogin"> <input type="password"
-						placeholder="Password" name="pwdLogin" id="pwdLogin"> <input
-						type="button" name="Login" value="Login" onclick="submitForm();">
+					<input type="text" placeholder="Email" name="emailLogin" id="emailLogin" onkeyup='saveValue(this);'>
+					 <input type="password" placeholder="Password" name="pwdLogin" id="pwdLogin" onkeyup='saveValue(this);'> 
+					 <input	type="button" name="Login" value="Login" onclick="submitForm();">
 				</form>
 			</div>
 			<div class="register-show" style="padding-bottom: 70px;">
@@ -76,6 +75,26 @@
 		</div>
 	</div>
 <script type="text/javascript">
+	
+	document.getElementById("emailLogin").value = getSavedValue("emailLogin");    // set the value to this input
+	document.getElementById("pwdLogin").value = getSavedValue("pwdLogin");   // set the value to this input
+	/* Here you can add more inputs to set value. if it's saved */
+	
+	//Save the value function - save it to localStorage as (ID, VALUE)
+	function saveValue(e){
+	    var id = e.id;  // get the sender's id to save it . 
+	    var val = e.value; // get the value. 
+	    localStorage.setItem(id, val);// Every time user writing something, the localStorage's value will override . 
+	}
+	
+	//get the saved value function - return the value of "v" from localStorage. 
+	function getSavedValue  (v){
+	    if (!localStorage.getItem(v)) {
+	        return "";// You can change this to your defualt value. 
+	    }
+	    return localStorage.getItem(v);
+	}
+	
 	$(document).ready(function() {
 		var isRegistra = '[[${isRegistra}]]';
 		if (isRegistra == 'true') {
@@ -88,6 +107,14 @@
 		} else {
 			$('.login-info-box').fadeOut();
 			$('.login-show').addClass('show-log-panel');
+		}
+		var errore = '[[${errore}]]';
+		if(errore == 'password') {
+			$( "#pwdLogin" ).addClass( "has-error" );
+		} else if (errore == 'disattivato'){
+			alert("Utente disattivato");
+		} else if (errore == 'inesistente'){
+			$( "#emailLogin" ).addClass( "has-error" );
 		}
 	});
 
