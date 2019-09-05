@@ -25,14 +25,21 @@
 				<div class="tab-content">
 					<form action="#" th:action="@{/ricercaAttivita}" method="post"
 						id="saveForm" class="needs-validation">
+						<input type="hidden" id="prezzo" name="prezzo">
 						<div class="form-row">
 							<div class="form-group col-md-6">
 								<label for="inputNome">Nome</label> <input type="text"
 									class="form-control" name="nome">
 							</div>
 							<div class="form-group col-md-6">
-								<label for="prezzo">Prezzo</label> <input type="text"
-									class="form-control" name="prezzo">
+								<label for="prezzo">Prezzo massimo</label> 
+							<select class="form-control" id="prezzoSelect">
+						      <option></option>
+						      <option value="50.00">50 €</option>
+						      <option value="100.00">100 €</option>
+						      <option value="150.00">150 €</option>
+						      <option value="200.00">200 €</option>
+						    </select>
 							</div>
 							<div class="form-group col-md-6">
 								<label for="citta">Citta</label> <input type="text"
@@ -149,17 +156,17 @@
 		$('#attivitaRicercate').hide();
 	}
 	
-// 	if( nome == 'Ospite') {
-// 		$('#salvaAttivita').hide();
-// 		$('#prenota').hide();
-// 	}
-	
 	function valorizzaModale(idAttivita, idCicerone) {
 		$('#idAttivita').val(idAttivita);
 		$('#idCicerone').val(idCicerone);
 		$('#tipologia').val("Ricercate");
 		$('#confirm-submit').modal('show');
 	}
+	
+	$("#prezzoSelect").change(function () {
+	    prezzo = $("#prezzoSelect :selected").val();
+	    $('#prezzo').val(prezzo);
+	});
 	
 </script>
 </html>

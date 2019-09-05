@@ -68,6 +68,8 @@ public class CiceroneController {
 	private static final String ATTIVITA_COST="attivita";
 	
 	private static final String REDIRECT_COST="redirect:/attivitaPrenotate";
+	
+	private static final String REDIRECT_PAGE_RICERCA="redirect:/pageRicercaAttivita";
 
 	@GetMapping(value = "/login")
 	public String homePage(Model model) {
@@ -193,13 +195,14 @@ public class CiceroneController {
 		model.addAttribute(UTENTE_COSTANT, utente);
 		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
+		model.addAttribute(ERR_COSTANT, errore);
 		return "ricerca-attivita";
 	}
 
 	@PostMapping(value = "/ricercaAttivita")
 	public String ricercaAttivita(Model model, HttpServletRequest request) {
 		Map<String, String> parametri = new HashMap<String, String>();
-		parametri.put("nome", request.getParameter("nome"));
+		parametri.put("attivita.Nome", request.getParameter("nome"));
 		parametri.put("prov", request.getParameter("prov"));
 		parametri.put("citta", request.getParameter("citta"));
 		parametri.put("prezzo", request.getParameter("prezzo"));
@@ -361,6 +364,10 @@ public class CiceroneController {
 	public String prenotaAttivita(@RequestParam("idAttivita") String idAttiv, @RequestParam("idAttivitaSalvate") String idAttivitaSalvate, 
 			@RequestParam("idCicerone") String idCicerone, @RequestParam("partecipanti") String numPartecipanti, @RequestParam("tipologia") String tipologia,
 			Model model) {
+		if(numPartecipanti.equalsIgnoreCase("") || Integer.valueOf(numPartecipanti) == 0) {
+			errore="Numero dei partecipanti errato, inserire un numero corretto";
+			return REDIRECT_PAGE_RICERCA;
+		}
 		Map<String, Object> map = dbQuery.selectPosti(Integer.valueOf(idAttiv));
 		AttivitaRicercate attivita = new AttivitaRicercate();
 		attivita.setPostiPrenotati(Integer.valueOf(String.valueOf(map.get("posti_prenotati"))));
@@ -382,16 +389,16 @@ public class CiceroneController {
 			try {
 				emailProvider.send(emailCicerone, "Richiesta prenotazione attivita", stringBuilder.toString());
 			} catch (MessagingException e) {
-				model.addAttribute(ERR_COSTANT, "Errore nell'invio dell'email");
-				return "redirect:/pageRicercaAttivita";
+				errore="Errore nell'invio dell'email";
+				return REDIRECT_PAGE_RICERCA;
 			}
 		} else {
-			model.addAttribute(ERR_COSTANT, "Posti prenotati maggiori al numero massimo");
+			errore="Posti prenotati maggiori del numero massimo";
 		}
 		if(tipologia.equalsIgnoreCase("Salvate")){
 			return "redirect:/doEliminaAttivitaSalvata/"+idAttivitaSalvate;
 		}
-		return "redirect:/pageRicercaAttivita";
+		return REDIRECT_PAGE_RICERCA;
 	}
 
 	private void modificaUtente(Utente utente) {

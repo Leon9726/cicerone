@@ -25,7 +25,7 @@ public class DbQuery {
 	JdbcTemplate jdbc;
 
 	private static final String SELECT_UTENTE_BY_EMAIL = "select * from utenti where Email=?";
-	
+
 	private static final String SELECT_UTENTE = "select * from utenti where Email=? and id_utente <> ?";
 
 	private static final String DISATTIVA_UTENTE = "UPDATE utenti SET stato = 0 WHERE (id_utente = ?)";
@@ -55,33 +55,33 @@ public class DbQuery {
 	private static final String UPDATE_STATO_PRENOTAZIONE = "UPDATE prenotazioni SET Stato = ? WHERE (id_prenotazione = ?)";
 
 	private static final String UPDATE_NUM_PRENOTATI = "UPDATE attivita SET posti_prenotati = ? WHERE (id_attivita = ?)";
-	
-	private static final String SELECT_PRENOTAZIONI="select attivita.posti_prenotati, prenotazioni.Num_partecipanti, prenotazioni.id_attivita from cicerone.prenotazioni LEFT JOIN attivita ON attivita.id_attivita = prenotazioni.id_attivita where id_prenotazione=?";
+
+	private static final String SELECT_PRENOTAZIONI = "select attivita.posti_prenotati, prenotazioni.Num_partecipanti, prenotazioni.id_attivita from cicerone.prenotazioni LEFT JOIN attivita ON attivita.id_attivita = prenotazioni.id_attivita where id_prenotazione=?";
 
 	private static final String INSERT_ATTIVITA_SALVATE = "INSERT INTO attivita_salvate (id_utente, id_attivita, id_cicerone) VALUES (?, ?, ?)";
-	
+
 	private static final String ATTIVITA_SALVATE = "select idattivita_salvata, utenti.nome as NomeCicerone, utenti.cognome,utenti.Email, attivita.* from cicerone.attivita_salvate left join utenti on utenti.id_utente = attivita_salvate.id_utente left join attivita on attivita.id_attivita=attivita_salvate.id_attivita where attivita_salvate.id_utente=?";
-	
+
 	private static final String DELETE_ATTIVITA_SALVATE = "DELETE FROM attivita_salvate WHERE (idattivita_salvata = ?)";
-	
+
 	private static final String INSERT_FEEDBACK = "INSERT INTO feedback (id_utente, id_cicerone, punteggio, didascalia) VALUES (?, ?, ?, ?)";
-	
+
 	private static final String DELETE_PRENOTAZIONE = "DELETE FROM prenotazioni WHERE (id_prenotazione = ?)";
-	
-	private static final String SELECT_FEEDBACK= "select nome, cognome, punteggio, didascalia from cicerone.feedback left join utenti on utenti.id_utente = feedback.id_utente where id_cicerone=?";
-	
-	private static final String COUNT_PRENOTAZIONE= "SELECT count(id_prenotazione) FROM cicerone.prenotazioni where id_cicerone=? and Stato = 'in attesa';";
-	
-	private static final String AND=" and ";
-	
+
+	private static final String SELECT_FEEDBACK = "select nome, cognome, punteggio, didascalia from cicerone.feedback left join utenti on utenti.id_utente = feedback.id_utente where id_cicerone=?";
+
+	private static final String COUNT_PRENOTAZIONE = "SELECT count(id_prenotazione) FROM cicerone.prenotazioni where id_cicerone=? and Stato = 'in attesa';";
+
+	private static final String AND = " and ";
+
 	public Utente trovaUtente(String email) {
 		return jdbc.query(SELECT_UTENTE_BY_EMAIL, new UtenteMapper(), email);
 	}
-	
+
 	public List<Feedback> trovaFeedback(int idCicerone) {
 		return jdbc.query(SELECT_FEEDBACK, new FeedbackMapper(), idCicerone);
 	}
-	
+
 	public List<AttivitaRicercate> trovaAttivitaSalvate(int idUtente) {
 		return jdbc.query(ATTIVITA_SALVATE, new AttivitaRicercateMapper("salvate"), idUtente);
 	}
@@ -89,7 +89,7 @@ public class DbQuery {
 	public int trovaIDUtente(String email) {
 		return jdbc.queryForObject(SELECT_ID_UTENTE_BY_EMAIL, new Object[] { email }, Integer.class);
 	}
-	
+
 	public int countPrenotazioni(int id) {
 		return jdbc.queryForObject(COUNT_PRENOTAZIONE, new Object[] { id }, Integer.class);
 	}
@@ -101,15 +101,14 @@ public class DbQuery {
 	public void updateStato(String stato, int idPrenotazione) {
 		jdbc.update(UPDATE_STATO_PRENOTAZIONE, stato, idPrenotazione);
 	}
-	
+
 	public void deleteAttivitaSalvata(int idAttivitaSalvata) {
 		jdbc.update(DELETE_ATTIVITA_SALVATE, idAttivitaSalvata);
 	}
-	
+
 	public void deletePrenotazione(int idPrenotazione) {
 		jdbc.update(DELETE_PRENOTAZIONE, idPrenotazione);
 	}
-
 
 	public List<Attivita> trovaAttivita(int idUtente) {
 		return jdbc.query(SELECT_ATTIVITA, new AttivitaMapper(), idUtente);
@@ -123,20 +122,20 @@ public class DbQuery {
 		jdbc.update(INSERT_UTENTE, utente.getNome(), utente.getCognome(), utente.getEmail(), utente.getPassword(),
 				utente.getCellulare());
 	}
-	
+
 	public void inserisciAttivitaSalvata(int idAttivita, int idUtente, int idCicerone) {
 		jdbc.update(INSERT_ATTIVITA_SALVATE, idUtente, idAttivita, idCicerone);
 	}
-	
+
 	public void inserisciFeedback(int idUtente, int idCicerone, float valutazione, String descrizione) {
 		jdbc.update(INSERT_FEEDBACK, idUtente, idCicerone, valutazione, descrizione);
 	}
-	
+
 	public Map<String, Object> selectPosti(int idAttivita) {
 		List<Map<String, Object>> list = jdbc.queryForList(SELECT_NUM_POSTI, idAttivita);
 		return list.get(0);
 	}
-	
+
 	public Map<String, Object> selectNumPrenotazioni(int idPrenotazione) {
 		List<Map<String, Object>> list = jdbc.queryForList(SELECT_PRENOTAZIONI, idPrenotazione);
 		return list.get(0);
@@ -159,7 +158,7 @@ public class DbQuery {
 	}
 
 	public void updatePostiPrenotazione(int idAttivita, int posti) {
-		Object[] params = {posti, idAttivita };
+		Object[] params = { posti, idAttivita };
 		int[] types = { Types.BIGINT, Types.BIGINT };
 		jdbc.update(UPDATE_NUM_PRENOTATI, params, types);
 	}
@@ -177,12 +176,13 @@ public class DbQuery {
 	}
 
 	public void disattivaProfilo(int idUtente) {
-		jdbc.update(DISATTIVA_UTENTE, idUtente );
+		jdbc.update(DISATTIVA_UTENTE, idUtente);
 
 	}
 
 	public List<AttivitaRicercate> ricercaAttivita(Map<String, String> parametri, int idUtente) {
-		return jdbc.query(createQuerySearchAttivita(parametri, idUtente), new AttivitaRicercateMapper("ricercate"), null);
+		return jdbc.query(createQuerySearchAttivita(parametri, idUtente), new AttivitaRicercateMapper("ricercate"),
+				null);
 	}
 
 	public List<AttivitaRicercate> ricercaAttivitaPrenotate(int id, int tipologia) {
@@ -209,8 +209,8 @@ public class DbQuery {
 						.append("'").append(idUtente).append("'")
 						.append(" or prenotazioni.id_utente is null or prenotazioni.Stato = 'respinta') and Max_partecipanti <> attivita.posti_prenotati and ");
 		sql.append("'").append(idUtente).append("'").append("<> attivita.id_cicerone");
-		if (!parametri.get("nome").equals("")) {
-			chiavi.add("nome");
+		if (!parametri.get("attivita.Nome").equals("")) {
+			chiavi.add("attivita.Nome");
 		}
 		if (!parametri.get("citta").equals("")) {
 			chiavi.add("citta");
@@ -225,12 +225,30 @@ public class DbQuery {
 			chiavi.add("prezzo");
 		}
 		for (int i = 0; i < chiavi.size(); i++) {
-			if (i == (chiavi.size() - 1)) {
-				sql.append(AND).append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i)))
-						.append("'").append(";");
+			if (chiavi.size() == 1) {
+				if(chiavi.get(i).equalsIgnoreCase("prezzo")){
+					sql.append(AND).append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
+					.append(";");
+				} else {
+					sql.append(AND).append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i))).append("'")
+					.append(";");
+				}
+			} else if (i == (chiavi.size() - 1)) {
+				if(chiavi.get(i).equalsIgnoreCase("prezzo")){
+					sql.append(AND).append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
+					.append(";");
+				} else {
+				sql.append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i))).append("'")
+						.append(";");
+				}
 			} else {
+				if(chiavi.get(i).equalsIgnoreCase("prezzo")){
+					sql.append(AND).append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
+					.append(";");
+				} else {
 				sql.append(AND).append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i)))
 						.append("'").append(AND);
+				}
 			}
 		}
 		return sql.toString();
@@ -238,7 +256,7 @@ public class DbQuery {
 
 	public boolean esisteUtente(String email, int idUtente) {
 		Utente u = jdbc.query(SELECT_UTENTE, new UtenteMapper(), email, idUtente);
-		if(u == null) {
+		if (u == null) {
 			return false;
 		}
 		return true;
