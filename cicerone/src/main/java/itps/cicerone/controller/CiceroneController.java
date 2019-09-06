@@ -149,7 +149,7 @@ public class CiceroneController {
 		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
 		model.addAttribute(UTENTE_COSTANT, utente);
-		if(errore!= null) {
+		if(errore!= null && errore.equalsIgnoreCase(ERRORE_COST)) {
 			model.addAttribute(ERR_COSTANT, errore);
 		}
 		return "profilo";
