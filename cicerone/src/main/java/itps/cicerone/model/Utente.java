@@ -20,7 +20,7 @@ public class Utente {
 	@Size(min=1, message="Password deve essere inserito")
 	private String password;
 	
-	@Size(min=1, max=10, message="Cellulare deve essere inserito")
+	@Size(min=10, max=10, message="Cellulare deve essere inserito")
 	private String cellulare;
 	
 	private int stato;

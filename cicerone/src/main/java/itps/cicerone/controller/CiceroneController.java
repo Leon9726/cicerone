@@ -202,7 +202,6 @@ public class CiceroneController {
 	@PostMapping(value = "/ricercaAttivita")
 	public String ricercaAttivita(Model model, HttpServletRequest request) {
 		Map<String, String> parametri = new HashMap<String, String>();
-		parametri.put("attivita.Nome", request.getParameter("nome"));
 		parametri.put("prov", request.getParameter("prov"));
 		parametri.put("citta", request.getParameter("citta"));
 		parametri.put("prezzo", request.getParameter("prezzo"));

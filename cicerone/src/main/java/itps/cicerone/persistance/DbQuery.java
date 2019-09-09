@@ -209,9 +209,6 @@ public class DbQuery {
 						.append("'").append(idUtente).append("'")
 						.append(" or prenotazioni.id_utente is null or prenotazioni.Stato = 'respinta') and Max_partecipanti <> attivita.posti_prenotati and ");
 		sql.append("'").append(idUtente).append("'").append("<> attivita.id_cicerone");
-		if (!parametri.get("attivita.Nome").equals("")) {
-			chiavi.add("attivita.Nome");
-		}
 		if (!parametri.get("citta").equals("")) {
 			chiavi.add("citta");
 		}
