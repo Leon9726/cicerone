@@ -73,6 +73,8 @@ public class DbQuery {
 	private static final String COUNT_PRENOTAZIONE = "SELECT count(id_prenotazione) FROM cicerone.prenotazioni where id_cicerone=? and Stato = 'in attesa';";
 
 	private static final String AND = " and ";
+	
+	private static final String PREZZO = "prezzo";
 
 	public Utente trovaUtente(String email) {
 		return jdbc.query(SELECT_UTENTE_BY_EMAIL, new UtenteMapper(), email);
@@ -208,7 +210,7 @@ public class DbQuery {
 				"SELECT attivita.*, utenti.nome as NomeCicerone, utenti.cognome, utenti.Email from attivita LEFT JOIN utenti ON utenti.id_utente=attivita.id_cicerone  left join prenotazioni on attivita.id_attivita =prenotazioni.id_attivita where (prenotazioni.id_utente <> ")
 						.append("'").append(idUtente).append("'")
 						.append(" or prenotazioni.id_utente is null or prenotazioni.Stato = 'respinta') and Max_partecipanti <> attivita.posti_prenotati and ");
-		sql.append("'").append(idUtente).append("'").append("<> attivita.id_cicerone");
+		sql.append("'").append(idUtente).append("'").append("<> attivita.id_cicerone and ").append("Data >= NOW()");
 		if (!parametri.get("citta").equals("")) {
 			chiavi.add("citta");
 		}
@@ -218,12 +220,12 @@ public class DbQuery {
 		if (!parametri.get("data").equals("")) {
 			chiavi.add("data");
 		}
-		if (!parametri.get("prezzo").equals("")) {
-			chiavi.add("prezzo");
+		if (!parametri.get(PREZZO).equals("")) {
+			chiavi.add(PREZZO);
 		}
 		for (int i = 0; i < chiavi.size(); i++) {
 			if (chiavi.size() == 1) {
-				if(chiavi.get(i).equalsIgnoreCase("prezzo")){
+				if(chiavi.get(i).equalsIgnoreCase(PREZZO)){
 					sql.append(AND).append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
 					.append(";");
 				} else {
@@ -231,7 +233,7 @@ public class DbQuery {
 					.append(";");
 				}
 			} else if (i == (chiavi.size() - 1)) {
-				if(chiavi.get(i).equalsIgnoreCase("prezzo")){
+				if(chiavi.get(i).equalsIgnoreCase(PREZZO)){
 					sql.append(AND).append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
 					.append(";");
 				} else {
@@ -239,7 +241,7 @@ public class DbQuery {
 						.append(";");
 				}
 			} else {
-				if(chiavi.get(i).equalsIgnoreCase("prezzo")){
+				if(chiavi.get(i).equalsIgnoreCase(PREZZO)){
 					sql.append(AND).append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
 					.append(";");
 				} else {
