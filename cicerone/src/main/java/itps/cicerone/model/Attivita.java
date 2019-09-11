@@ -8,12 +8,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class Attivita {
 	
-	@Size(min=1, message="Nome deve essere inserito")
-	@Pattern(regexp = "^[a-zA-Z]*$")
+	@NotEmpty
 	private String nome;
 	
 	@Size(max=50, message="Massimo 50 caratteri")

@@ -47,6 +47,8 @@ public class CiceroneController {
 	
 	List<Feedback> feedback = new ArrayList<Feedback>();
 	
+	boolean isErrore=false;
+	
 	private static final String UTENTE_COSTANT="utente";
 	
 	private static final String LOGIN_COSTANT="login";
@@ -113,16 +115,19 @@ public class CiceroneController {
 
 	@PostMapping(value = "/entra")
 	public String entra(@RequestParam("emailLogin") String email, @RequestParam("pwdLogin") String pwd, Model model) {
+		isErrore=false;
 		StringBuilder stringBuilder = new StringBuilder("");
 		utente = dbQuery.trovaUtente(email);
 		if (utente != null) {
 			if (!utente.getPassword().equals(pwd)) {
 				stringBuilder.append("password");
+				isErrore=true;
 				model.addAttribute(ERR_COSTANT, stringBuilder.toString());
 				utente = new Utente();
 				model.addAttribute(UTENTE_COSTANT, utente);
 				return LOGIN_COSTANT;
 			} else if (utente.getStato() == 0) {
+				isErrore=true;
 				stringBuilder.append("disattivato");
 				model.addAttribute(ERR_COSTANT, stringBuilder.toString());
 				utente= new Utente();
@@ -130,6 +135,7 @@ public class CiceroneController {
 				return LOGIN_COSTANT;
 			}
 		} else {
+			isErrore=true;
 			stringBuilder.append("inesistente");
 			model.addAttribute(ERR_COSTANT, stringBuilder.toString());
 			utente= new Utente();
@@ -158,6 +164,7 @@ public class CiceroneController {
 	@PostMapping(value = "/salvaUtente")
 	public String salvaUtente(@Valid @ModelAttribute(UTENTE_COSTANT) Utente utenteUpdate, BindingResult result,
 			Model model) {
+		isErrore=false;
 		errore= null;
 		if (!result.hasErrors()) {
 			if(!dbQuery.esisteUtente(utenteUpdate.getEmail(), utente.getIdUtente())){
@@ -175,6 +182,7 @@ public class CiceroneController {
 	@PostMapping(value = "/salvaAttivita")
 	public String salvaAttivita(@Valid @ModelAttribute(ATTIVITA_COST) Attivita attivita, BindingResult result,
 			Model model) {
+		isErrore=false;
 		model.addAttribute(UTENTE_COSTANT, utente);
 		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
@@ -186,6 +194,7 @@ public class CiceroneController {
 			}
 			return "redirect:/attivita";
 		}
+		isErrore=true;
 		model.addAttribute(ERR_COSTANT, ERRORE_COST);
 		return ATTIVITA_MOD;
 	}
@@ -195,12 +204,16 @@ public class CiceroneController {
 		model.addAttribute(UTENTE_COSTANT, utente);
 		model.addAttribute(COUNT_PRENOTAZIONI, countPrenotazioni);
 		model.addAttribute(ATT_PREN_COSTANT, attivitaPrenotate);
-		model.addAttribute(ERR_COSTANT, errore);
+		if(isErrore){
+			isErrore=false;
+			model.addAttribute(ERR_COSTANT, errore);
+		}
 		return "ricerca-attivita";
 	}
 
 	@PostMapping(value = "/ricercaAttivita")
 	public String ricercaAttivita(Model model, HttpServletRequest request) {
+		isErrore=false;
 		Map<String, String> parametri = new HashMap<String, String>();
 		parametri.put("prov", request.getParameter("prov"));
 		parametri.put("citta", request.getParameter("citta"));
@@ -363,7 +376,9 @@ public class CiceroneController {
 	public String prenotaAttivita(@RequestParam("idAttivita") String idAttiv, @RequestParam("idAttivitaSalvate") String idAttivitaSalvate, 
 			@RequestParam("idCicerone") String idCicerone, @RequestParam("partecipanti") String numPartecipanti, @RequestParam("tipologia") String tipologia,
 			Model model) {
-		if(numPartecipanti.equalsIgnoreCase("") || Integer.valueOf(numPartecipanti) == 0) {
+		isErrore=false;
+		if(numPartecipanti.equalsIgnoreCase("") || Integer.valueOf(numPartecipanti) <= 0) {
+			isErrore=true;
 			errore="Numero dei partecipanti errato, inserire un numero corretto";
 			return REDIRECT_PAGE_RICERCA;
 		}
@@ -388,10 +403,12 @@ public class CiceroneController {
 			try {
 				emailProvider.send(emailCicerone, "Richiesta prenotazione attivita", stringBuilder.toString());
 			} catch (MessagingException e) {
+				isErrore=true;
 				errore="Errore nell'invio dell'email";
 				return REDIRECT_PAGE_RICERCA;
 			}
 		} else {
+			isErrore=true;
 			errore="Posti prenotati maggiori del numero massimo";
 		}
 		if(tipologia.equalsIgnoreCase("Salvate")){
