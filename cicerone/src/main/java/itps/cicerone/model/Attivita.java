@@ -16,7 +16,6 @@ public class Attivita {
 	@NotEmpty
 	private String nome;
 	
-	@Size(max=50, message="Massimo 50 caratteri")
 	private String descrizione;
 	
 	@Size(min=1, message="Città deve essere inserita")
