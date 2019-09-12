@@ -60,7 +60,7 @@ public class DbQuery {
 
 	private static final String INSERT_ATTIVITA_SALVATE = "INSERT INTO attivita_salvate (id_utente, id_attivita, id_cicerone) VALUES (?, ?, ?)";
 
-	private static final String ATTIVITA_SALVATE = "select idattivita_salvata, utenti.nome as NomeCicerone, utenti.cognome,utenti.Email, attivita.* from cicerone.attivita_salvate left join utenti on utenti.id_utente = attivita_salvate.id_utente left join attivita on attivita.id_attivita=attivita_salvate.id_attivita where attivita_salvate.id_utente=?";
+	private static final String ATTIVITA_SALVATE = "select idattivita_salvata, utenti.nome as NomeCicerone, utenti.cognome,utenti.Email, attivita.* from cicerone.attivita_salvate left join utenti on utenti.id_utente = attivita_salvate.id_cicerone left join attivita on attivita.id_attivita=attivita_salvate.id_attivita where attivita_salvate.id_utente=?";
 
 	private static final String DELETE_ATTIVITA_SALVATE = "DELETE FROM attivita_salvate WHERE (idattivita_salvata = ?)";
 
@@ -223,18 +223,21 @@ public class DbQuery {
 		if (!parametri.get(PREZZO).equals("")) {
 			chiavi.add(PREZZO);
 		}
+		if(!chiavi.isEmpty()){
+			sql.append(AND);
+		}
 		for (int i = 0; i < chiavi.size(); i++) {
 			if (chiavi.size() == 1) {
 				if(chiavi.get(i).equalsIgnoreCase(PREZZO)){
-					sql.append(AND).append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
+					sql.append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
 					.append(";");
 				} else {
-					sql.append(AND).append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i))).append("'")
+					sql.append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i))).append("'")
 					.append(";");
 				}
 			} else if (i == (chiavi.size() - 1)) {
 				if(chiavi.get(i).equalsIgnoreCase(PREZZO)){
-					sql.append(AND).append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
+					sql.append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
 					.append(";");
 				} else {
 				sql.append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i))).append("'")
@@ -242,10 +245,10 @@ public class DbQuery {
 				}
 			} else {
 				if(chiavi.get(i).equalsIgnoreCase(PREZZO)){
-					sql.append(AND).append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
+					sql.append(chiavi.get(i)).append(" < ").append("'").append(parametri.get(chiavi.get(i))).append("'")
 					.append(";");
 				} else {
-				sql.append(AND).append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i)))
+				sql.append(chiavi.get(i)).append(" = ").append("'").append(parametri.get(chiavi.get(i)))
 						.append("'").append(AND);
 				}
 			}
